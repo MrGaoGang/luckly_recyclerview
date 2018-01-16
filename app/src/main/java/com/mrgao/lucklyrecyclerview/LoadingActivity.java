@@ -70,7 +70,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setLoadingTextColor(Color.BLUE);
         //改变下方加载进度条的颜色
         mLRecyclerView.setLoadingProgressColor(Color.BLUE);
-
+        //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
         mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
