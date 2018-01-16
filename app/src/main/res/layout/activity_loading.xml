@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="mrgao.com.recyclerviewtext.loadMore.activity.LoadingActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/showError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示错误视图"/>
+
+        <Button
+            android:id="@+id/showEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示空视图"/>
+
+    </LinearLayout>
+
+
+    <com.mrgao.luckrecyclerview.LucklyRecyclerView
+        android:id="@+id/yRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- <android.support.v7.widget.RecyclerView
+         android:layout_width="match_parent"
+         android:id="@+id/recyclerView"
+         android:layout_height="wrap_content">
+
+     </android.support.v7.widget.RecyclerView>-->
+
+</LinearLayout>

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <mrgao.com.recyclerviewtext.loadMore.recyclerview.LRecyclerView
+        <com.mrgao.luckrecyclerview.recyclerview.LRecyclerView
             android:id="@+id/lrecyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
