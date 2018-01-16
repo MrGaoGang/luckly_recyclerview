@@ -137,6 +137,7 @@ public class TwoFishView extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        mPaint.setColor(mPointColor);
         for (int i = 0; i < numberOfCircle; i++) {
             canvas.save();
             canvas.rotate(rotates[i], mWidth / 2, mHeight / 2);
@@ -146,6 +147,10 @@ public class TwoFishView extends View {
         }
     }
 
+    public void setProgressColor(int progressColor) {
+        mPointColor = progressColor;
+        postInvalidate();
+    }
 
 }
 

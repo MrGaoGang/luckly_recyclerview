@@ -74,5 +74,9 @@ public interface LuckRecyclerViewInterface {
 
     void addLinearDivider(int oritation, int color, int lineWidth);
 
+    void setLoadingTextColor(int color);
 
+    void setLoadingProgressColor(int progressColor);
+
+    void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener);
 }

@@ -17,7 +17,6 @@ import com.mrgao.luckrecyclerview.recyclerview.LRecyclerView;
 import java.util.List;
 
 
-
 /**
  * Created by mr.gao on 2018/1/16.
  * Package:    mrgao.com.recyclerviewtext.loadMore.recyclerview
@@ -259,6 +258,21 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         mLRecyclerView.addLinearDivider(oritation, color, lineWidth);
     }
 
+    @Override
+    public void setLoadingTextColor(int color) {
+        mLRecyclerView.setLoadingTextColor(color);
+    }
+
+    @Override
+    public void setLoadingProgressColor(int progressColor) {
+        mLRecyclerView.setLoadingProgressColor(progressColor);
+    }
+
+    @Override
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mLRecyclerView.setOnItemClickListener(onItemClickListener);
+    }
+
     /**
      * 设置加载更多的接口回调
      */
@@ -280,5 +294,14 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         void onScrollUp(LRecyclerView recycler, int dy);
 
         void onScrollDown(LRecyclerView recycler, int dy);
+    }
+
+    /**
+     * 点击事件
+     */
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+
+        void onItemLongClick(int position);
     }
 }

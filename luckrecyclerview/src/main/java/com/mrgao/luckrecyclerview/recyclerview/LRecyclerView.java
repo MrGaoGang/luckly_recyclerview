@@ -3,6 +3,7 @@ package com.mrgao.luckrecyclerview.recyclerview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -68,7 +69,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     //正在加载
     private String mMoreLoading = "正在加载...";
     //加载更多处于完成状态
-    private String mMoreLoadingComplete = "数据加载完成";
+    private String mMoreLoadingComplete = "上拉加载更多";
     //没有更多数据可以加载
     private String mMoreLoadingEnd = "无更多数据";
 
@@ -235,6 +236,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             return 0;
         }
     }
+
     @Override
     public List<View> getHeaderViews() {
         if (mWrapAdapter != null) {
@@ -518,6 +520,29 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+    @Override
+    public void setLoadingTextColor(int color) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setLoadingTextColor(color);
+        }
+    }
+
+    @Override
+    public void setLoadingProgressColor(int progressColor) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setProgressColor(progressColor);
+        }
+    }
+
+
+
+    @Override
+    public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setOnItemClickListener(onItemClickListener);
+        }
+    }
+
     /**
      * 检查是否应该为空
      */
@@ -529,7 +554,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             setVisibility(emptyViewVisible ? GONE : VISIBLE);
         }
     }
-
 
 
     /**
@@ -582,6 +606,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         //头部的view
         private List<View> mHeaderViews;
 
+        private int mLoadingTextColor = Color.RED;
+
+        private int mProgressColor = Color.RED;
+
+        private LucklyRecyclerView.OnItemClickListener mOnItemClickListener;
 
         public LoadMoreWrapAdapter(Adapter adapter) {
             mAdapter = adapter;
@@ -602,9 +631,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             if (holder instanceof FooterHolder) {
                 FooterHolder footerHolder = (FooterHolder) holder;
+                footerHolder.mProgressBar.setProgressColor(mProgressColor);
+                footerHolder.mTextView.setTextColor(mLoadingTextColor);
                 if (mFooterState == LOADING_COMPLETE) {
                     footerHolder.mProgressBar.setVisibility(GONE);
                     footerHolder.mTextView.setText(mMoreLoadingComplete);
@@ -619,6 +650,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             } else if (holder instanceof HeaderViewHolder) {
 
+
             } else {
                 //注意，此处必须要讲position减去头部的个数
                 if (mAdapter != null) {
@@ -628,7 +660,23 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 }
 
             }
-
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(position);
+                    }
+                }
+            });
+            holder.itemView.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemLongClick(position);
+                    }
+                    return true;
+                }
+            });
 
         }
 
@@ -739,6 +787,15 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             }
         }
 
+        public void setLoadingTextColor(int color) {
+            this.mLoadingTextColor = color;
+            notifyItemRangeChanged(getItemCount() - 1, 1);
+        }
+
+        public void setProgressColor(int color) {
+            this.mProgressColor = color;
+            notifyItemRangeChanged(getItemCount() - 1, 1);
+        }
 
         /**
          * 获取到头部的数量
@@ -781,6 +838,13 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             return mAdapter;
         }
 
+        /**
+         * 点击事件
+         * @param onItemClickListener
+         */
+        public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener){
+            this.mOnItemClickListener=onItemClickListener;
+        }
 
         public class FooterHolder extends ViewHolder {
             TwoFishView mProgressBar;
