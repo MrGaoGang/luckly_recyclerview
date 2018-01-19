@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.mrgao.lucklyrecyclerview.adapter.DataAdapter;
 import com.mrgao.luckrecyclerview.LucklyRecyclerView;
-import com.mrgao.luckrecyclerview.recyclerview.LRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +39,10 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //添加下拉刷新监听
         mLRecyclerView.setOnRefreshListener(this);
 
-        mLRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLRecyclerView.setLayoutManager(new GridLayoutManager(this,4));
         //封装好了的线性分割线,也可以使用setGridDivider()；使用以及封装好的网格式布局，在使用这句话之前，请先设置好LayoutManager
-        mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
+        //mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
+        mLRecyclerView.addGridDivider();
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 

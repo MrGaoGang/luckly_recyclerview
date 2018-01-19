@@ -1,5 +1,6 @@
 package com.mrgao.luckrecyclerview.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -73,16 +74,31 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     //没有更多数据可以加载
     private String mMoreLoadingEnd = "无更多数据";
 
+    /**
+     *
+     * @param context
+     */
     public LRecyclerView(Context context) {
         super(context);
 
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public LRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public LRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -90,6 +106,9 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
 
+    /**
+     *
+     */
     private void addOnScrollListener() {
         this.addOnScrollListener(new OnScrollListener() {
             @Override
@@ -141,6 +160,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         });
     }
 
+    /**
+     *
+     * @param lastPositions
+     * @return
+     */
     private int findMax(int[] lastPositions) {
         int max = lastPositions[0];
         for (int value : lastPositions) {
@@ -175,6 +199,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         });
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public RecyclerView getOriginalRecyclerView() {
         return this;
@@ -237,6 +265,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<View> getHeaderViews() {
         if (mWrapAdapter != null) {
@@ -341,8 +373,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         addViewToRoot(mErrorView);
     }
 
+
     /**
      * 显示错误
+     * @param errorShow
      */
     @Override
     public void showError(boolean errorShow) {
@@ -392,8 +426,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+
     /**
      * 设置加载更多处于加载状态
+     * @param loading
      */
     @Override
     public void setLoading(String loading) {
@@ -440,6 +476,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置无更多数据
+     * @param loading
      */
     @Override
     public void setLoadingNoMore(String loading) {
@@ -505,8 +542,9 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置线性布局的分割线
-     *
      * @param oritation
+     * @param color
+     * @param lineWidth
      */
     @Override
     public void addLinearDivider(int oritation, int color, int lineWidth) {
@@ -520,6 +558,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+    /**
+     *
+     * @param color
+     */
     @Override
     public void setLoadingTextColor(int color) {
         if (mWrapAdapter != null) {
@@ -527,6 +569,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+    /**
+     *
+     * @param progressColor
+     */
     @Override
     public void setLoadingProgressColor(int progressColor) {
         if (mWrapAdapter != null) {
@@ -535,7 +581,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
 
-
+    /**
+     *
+     * @param onItemClickListener
+     */
     @Override
     public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener) {
         if (mWrapAdapter != null) {
@@ -546,11 +595,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     /**
      * 检查是否应该为空
      */
+    @SuppressLint("WrongConstant")
     private void checkIfEmpty() {
         if (mEmptyView != null && mWrapAdapter != null) {
             final boolean emptyViewVisible =
                     mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 1;
-            mEmptyView.setVisibility(emptyViewVisible ? VISIBLE : GONE);
+            mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : GONE);
             setVisibility(emptyViewVisible ? GONE : VISIBLE);
         }
     }
@@ -592,7 +642,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      * Description:
      */
 
-    private class LoadMoreWrapAdapter extends Adapter<ViewHolder> {
+    public class LoadMoreWrapAdapter extends Adapter<ViewHolder> {
 
         private RecyclerView.Adapter mAdapter;
         //底部的Item
@@ -630,6 +680,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         }
 
+        @SuppressLint("WrongConstant")
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
             if (holder instanceof FooterHolder) {
@@ -760,7 +811,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
 
 
-        //根据header的ViewType判断是哪个header
+        /**
+         * 根据header的ViewType判断是哪个header
+         * @param itemType
+         * @return
+         */
         private View getHeaderViewByType(int itemType) {
             if (!isHeaderType(itemType)) {
                 return null;
@@ -768,7 +823,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             return mHeaderViews.get(itemType - HEADER_TYPE_SIZE);
         }
 
-        //判断一个type是否为HeaderType
+        /**
+         * 判断一个type是否为HeaderType
+         * @param itemViewType
+         * @return
+         */
         private boolean isHeaderType(int itemViewType) {
             return mHeaderViews.size() > 0 && mHeaderTypes.contains(itemViewType);
         }
@@ -787,11 +846,19 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             }
         }
 
+        /**
+         * 设置加载更多的字体的颜色
+         * @param color
+         */
         public void setLoadingTextColor(int color) {
             this.mLoadingTextColor = color;
             notifyItemRangeChanged(getItemCount() - 1, 1);
         }
 
+        /**
+         * 设置进度条的颜色
+         * @param color
+         */
         public void setProgressColor(int color) {
             this.mProgressColor = color;
             notifyItemRangeChanged(getItemCount() - 1, 1);
@@ -983,6 +1050,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             }
         }
 
+
         /**
          * 判断是否是最后一列
          * 为什么要判断StaggeredGridLayoutManager？
@@ -992,6 +1060,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
          *
          * @param spanCount
          * @param position
+         * @param childCount
+         * @param recyclerView
          * @return
          */
         private boolean isLastColumn(int spanCount, int position, int childCount, RecyclerView recyclerView) {
@@ -1033,6 +1103,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
          * @param spanCount
          * @param childCount
          * @param position
+         * @param recyclerView
          * @return
          */
         private boolean isLastRow(int spanCount, int childCount, int position, RecyclerView recyclerView) {

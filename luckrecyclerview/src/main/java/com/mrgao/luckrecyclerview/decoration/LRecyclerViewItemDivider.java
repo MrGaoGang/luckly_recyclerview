@@ -33,6 +33,11 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     private int mLineHeight;
     private Paint mPaint;
 
+    /**
+     *使用系统默认的分割线的颜色
+     * @param context
+     * @param orientation
+     */
     public LRecyclerViewItemDivider(Context context, int orientation) {
         TypedArray typedArray = context.obtainStyledAttributes(ATTRS);
         mDivider = typedArray.getDrawable(0);
@@ -45,15 +50,26 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
         mOrientation = orientation;
     }
 
+    /**
+     *自定义分割线的颜色和高
+     * @param orientation
+     * @param color
+     * @param lineHeight
+     */
     public LRecyclerViewItemDivider(int orientation, int color, int lineHeight) {
         mOrientation = orientation;
-
         mPaint = new Paint();
         mPaint.setColor(color);
         mLineHeight = lineHeight;
         mPaint.setStrokeWidth(lineHeight);
     }
 
+    /**
+     *
+     * @param c
+     * @param parent
+     * @param state
+     */
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(c, parent, state);
@@ -64,6 +80,11 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
         }
     }
 
+    /**
+     *
+     * @param canvas
+     * @param recyclerView
+     */
     private void drawVertical(Canvas canvas, RecyclerView recyclerView) {
         int left = recyclerView.getPaddingLeft();
         int right = recyclerView.getWidth() - recyclerView.getPaddingRight();
@@ -90,11 +111,16 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     }
 
 
+    /**
+     *
+     * @param canvas
+     * @param recyclerView
+     */
     private void drawHo(Canvas canvas, RecyclerView recyclerView) {
         int top = recyclerView.getPaddingTop();
         int bottom = recyclerView.getHeight() - recyclerView.getPaddingBottom();
         int count = recyclerView.getChildCount();
-        for (int i = 0; i < count - 1; i++) {//是减1是因为最后的footer
+        for (int i = 0; i < count; i++) {//是减1是因为最后的footer
             View child = recyclerView.getChildAt(i);
             //获取到每一个item的margin的值
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
