@@ -47,6 +47,7 @@
 	addGridDivider(int color, int dividerHeight)
 	addLinearDivider(int oritation, int color, int lineWidth)
 ```
+<br>
 ###4、添加错误视图<br>
 	当网络连接失败等情况的时候，需要显示错误视图。<br>
 ```Java
@@ -85,6 +86,8 @@
 	//得到所有headerView的个数。
 	int getHeaderViewCount();
 ```
+<br>
+
 ###7、设置下拉刷新进度条的颜色和字体的颜色<br>
 ```Java
 	//改变下方加载进度的字体颜色
