@@ -4,7 +4,7 @@
 效果图：
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/main.gif) 
 <br>
-如何获取:[![](https://jitpack.io/v/MrGaoGang/LucklyRecyclerView.svg)](https://jitpack.io/#MrGaoGang/LucklyRecyclerView)
+如何获取:[![](https://jitpack.io/v/MrGaoGang/LucklyRecyclerView.svg)](https://jitpack.io/#MrGaoGang/LucklyRecyclerView)<br>
 第一步：在项目的build.gradle中添加<br>
 ```Java
    allprojects {
