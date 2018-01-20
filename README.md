@@ -39,13 +39,12 @@
 <br>
 
 ### 3、添加分割线<br>
-	已经封装好了线性布局的分割线和网格式布局的分割线、流式布局的分割线。<br>
-使用方法<br>
+	已经封装好了线性布局的分割线和网格式布局的分割线、流式布局的分割线。
 ```Java
 	//线性布局
  	mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
 	//网格式布局
-    mLRecyclerView.addGridDivider();
+   	 mLRecyclerView.addGridDivider();
 	//可以指定颜色和宽度
 	addGridDivider(int color, int dividerHeight)
 	addLinearDivider(int oritation, int color, int lineWidth)
@@ -53,25 +52,25 @@
 <br>
 
 ### 4、添加错误视图<br>
-	当网络连接失败等情况的时候，需要显示错误视图。<br>
+	当网络连接失败等情况的时候，需要显示错误视图。
 ```Java
 	//添加错误的View
-    mLRecyclerView.setErrorView(R.layout.error_view);
+   	 mLRecyclerView.setErrorView(R.layout.error_view);
 	//添加错误的View
 	View error = LayoutInflater.from(this).inflate(R.layout.view_error, null, false);
-    mLRecyclerView.setErrorView(error);
+   	 mLRecyclerView.setErrorView(error);
 ```
 <br>
 使用getErrorView()得到错误视图。<br>
 
 ### 5、添加空视图<br>
-	当数据为空的时候，需要显示。<br>
+	当数据为空的时候，需要显示。
 ```Java
 	//添加空的View
-    mLRecyclerView.setEmptyView(R.layout.empty_view);
+  	  mLRecyclerView.setEmptyView(R.layout.empty_view);
 	//添加空的View
 	View empty = LayoutInflater.from(this).inflate(R.layout.view_empty, null, false);
-    mLRecyclerView.setEmptyView(error);
+   	 mLRecyclerView.setEmptyView(error);
 ```
 <br>
 使用getErrorView()得到空视图。<br>
@@ -79,10 +78,10 @@
 ### 6、添加headerView<br>
 ```Java
 	//添加headerView
-    mLRecyclerView.addHeaderView(R.layout.header_view);
+   	 mLRecyclerView.addHeaderView(R.layout.header_view);
 	//添加headerView，需要设置父类为mLRecyclerView
 	View headerView = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
-    mLRecyclerView.addHeaderView(headerView);
+   	 mLRecyclerView.addHeaderView(headerView);
 ```
 <br>
 
@@ -103,7 +102,7 @@
 ```
 ### 8、设置监听事件<br>
 ```Java
- //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
+ 	//设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
 	mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
@@ -147,3 +146,4 @@
 ```
 
 ## 二、具体如何使用请看例子
+[LucklyRecyclerView](https://github.com/MrGaoGang/LucklyRecyclerView/tree/master/app/src/main/java/com/mrgao/lucklyrecyclerview)
