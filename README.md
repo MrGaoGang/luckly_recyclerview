@@ -18,23 +18,25 @@
 ```Java
  dependencies {
 	compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.0.0'
-	}
+}
 ```
 <br>
 
 ##一、部分方法介绍<br>
-###1、设置加载更多的监听事件<br>
+###设置加载更多的监听事件
 ```Java
 	mLRecyclerView.setLoadMoreListener(this);
 ```
 <br>
-重写onLoadMore()方法。<br>
-###2、设置下拉刷新监听事件<br>
+重写onLoadMore()方法。
+<br>
+###设置下拉刷新监听事件
 ```Java
 	mLRecyclerView.setOnRefreshListener(this);
 ```
 <br>
-重写onRefresh()方法。<br>
+重写onRefresh()方法。
+<br>
 ###3、添加分割线<br>
 	已经封装好了线性布局的分割线和网格式布局的分割线、流式布局的分割线。<br>
 使用方法<br>
