@@ -22,15 +22,15 @@
 ```
 <br>
 
-##一、部分方法介绍<br>
-###设置加载更多的监听事件
+##一、部分方法介绍
+###1、设置加载更多的监听事件<br>
 ```Java
 	mLRecyclerView.setLoadMoreListener(this);
 ```
 <br>
 重写onLoadMore()方法。
 <br>
-###设置下拉刷新监听事件
+###2、设置下拉刷新监听事件<br>
 ```Java
 	mLRecyclerView.setOnRefreshListener(this);
 ```
