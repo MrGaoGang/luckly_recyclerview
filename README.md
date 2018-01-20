@@ -24,21 +24,21 @@
 <br>
 
 ## 一、部分方法介绍<br>
-### 1、设置加载更多的监听事件<br>
+#### 1、设置加载更多的监听事件<br>
 ```Java
 	mLRecyclerView.setLoadMoreListener(this);
 ```
 并重写onLoadMore()方法。
 <br>
 
-### 2、设置下拉刷新监听事件<br>
+#### 2、设置下拉刷新监听事件<br>
 ```Java
 	mLRecyclerView.setOnRefreshListener(this);
 ```
 并重写onRefresh()方法。
 <br>
 
-### 3、添加分割线<br>
+#### 3、添加分割线<br>
 	已经封装好了线性布局的分割线和网格式布局的分割线、流式布局的分割线。
 ```Java
 	//线性布局
@@ -51,7 +51,7 @@
 ```
 <br>
 
-### 4、添加错误视图<br>
+#### 4、添加错误视图<br>
 	当网络连接失败等情况的时候，需要显示错误视图。
 ```Java
 	//添加错误的View
@@ -63,7 +63,7 @@
 <br>
 使用getErrorView()得到错误视图。<br>
 
-### 5、添加空视图<br>
+#### 5、添加空视图<br>
 	当数据为空的时候，需要显示。
 ```Java
 	//添加空的View
@@ -75,7 +75,7 @@
 <br>
 使用getErrorView()得到空视图。<br>
 
-### 6、添加headerView<br>
+#### 6、添加headerView<br>
 ```Java
 	//添加headerView
    	 mLRecyclerView.addHeaderView(R.layout.header_view);
@@ -83,8 +83,6 @@
 	View headerView = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
    	 mLRecyclerView.addHeaderView(headerView);
 ```
-<br>
-
 ```Java
 	//得到所有headerView视图。
 	List<View> getHeaderViews();
@@ -93,14 +91,14 @@
 ```
 <br>
 
-### 7、设置下拉刷新进度条的颜色和字体的颜色<br>
+#### 7、设置下拉刷新进度条的颜色和字体的颜色<br>
 ```Java
 	//改变下方加载进度的字体颜色
 	mLRecyclerView.setLoadingTextColor(Color.BLUE);
 	//改变下方加载进度条的颜色
 	mLRecyclerView.setLoadingProgressColor(Color.BLUE);
 ```
-### 8、设置监听事件<br>
+#### 8、设置监听事件<br>
 ```Java
  	//设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
 	mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
