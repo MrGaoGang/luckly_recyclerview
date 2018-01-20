@@ -7,17 +7,17 @@
 如何获取:
 第一步：在项目的build.gradle中添加<br>
 ```Java
-allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+   allprojects {
+	repositories {
+	...
+	maven { url 'https://jitpack.io' }
 	}
+    }
 ```
 第二步：添加依赖<br>
 ```Java
-dependencies {
-	        compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.0.0'
+    dependencies {
+	compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.0.0'
 	}
 ```
 
