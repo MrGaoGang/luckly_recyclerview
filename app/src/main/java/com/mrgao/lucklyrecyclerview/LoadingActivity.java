@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,10 +39,10 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //添加下拉刷新监听
         mLRecyclerView.setOnRefreshListener(this);
 
-        mLRecyclerView.setLayoutManager(new GridLayoutManager(this,4));
+        mLRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //封装好了的线性分割线,也可以使用setGridDivider()；使用以及封装好的网格式布局，在使用这句话之前，请先设置好LayoutManager
         //mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
-        mLRecyclerView.addGridDivider();
+        mLRecyclerView.addLinearDivider(LucklyRecyclerView.VERTICAL);
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
@@ -65,7 +65,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
         //添加headerView
-        mLRecyclerView.addHeaderView(R.layout.header_view);
+        //mLRecyclerView.addHeaderView(R.layout.header_view);
         //改变下方加载进度的字体颜色
         mLRecyclerView.setLoadingTextColor(Color.BLUE);
         //改变下方加载进度条的颜色

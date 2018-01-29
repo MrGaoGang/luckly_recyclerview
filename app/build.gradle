@@ -23,6 +23,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile project(':luckrecyclerview')
+    compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.0.0'
 
 }
