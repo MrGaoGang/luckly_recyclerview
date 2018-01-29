@@ -34,7 +34,8 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     private Paint mPaint;
 
     /**
-     *使用系统默认的分割线的颜色
+     * 使用系统默认的分割线的颜色
+     *
      * @param context
      * @param orientation
      */
@@ -51,7 +52,8 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     }
 
     /**
-     *自定义分割线的颜色和高
+     * 自定义分割线的颜色和高
+     *
      * @param orientation
      * @param color
      * @param lineHeight
@@ -65,7 +67,6 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     }
 
     /**
-     *
      * @param c
      * @param parent
      * @param state
@@ -81,7 +82,6 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
     }
 
     /**
-     *
      * @param canvas
      * @param recyclerView
      */
@@ -89,7 +89,7 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
         int left = recyclerView.getPaddingLeft();
         int right = recyclerView.getWidth() - recyclerView.getPaddingRight();
         int count = recyclerView.getChildCount();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count - 2; i++) {
             View view = recyclerView.getChildAt(i);
             //获取到每一个item的margin的值
 
@@ -112,7 +112,6 @@ public class LRecyclerViewItemDivider extends RecyclerView.ItemDecoration {
 
 
     /**
-     *
      * @param canvas
      * @param recyclerView
      */
