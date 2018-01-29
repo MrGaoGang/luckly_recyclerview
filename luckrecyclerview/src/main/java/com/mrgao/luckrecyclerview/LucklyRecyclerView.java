@@ -300,8 +300,8 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
      * 点击事件
      */
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(View rootView, int position);
 
-        void onItemLongClick(int position);
+        void onItemLongClick(View rootView, int position);
     }
 }

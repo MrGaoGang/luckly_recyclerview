@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.mrgao.lucklyrecyclerview.adapter.DataAdapter;
 import com.mrgao.luckrecyclerview.LucklyRecyclerView;
@@ -73,15 +74,19 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
         mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                Log.i(TAG,"点击--->"+position);
+            public void onItemClick(View view, int position) {
+                Log.i(TAG, "点击--->" + position);
             }
 
             @Override
-            public void onItemLongClick(int position) {
-                Log.i(TAG,"长按--->"+position);
+            public void onItemLongClick(View view, int position) {
+                TextView textView=(TextView) view.findViewById(R.id.item);
+                textView.setText("长按");
+                Log.i(TAG, "长按--->" + position);
             }
         });
+
+
     }
 
 

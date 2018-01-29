@@ -75,7 +75,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private String mMoreLoadingEnd = "无更多数据";
 
     /**
-     *
      * @param context
      */
     public LRecyclerView(Context context) {
@@ -84,7 +83,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param context
      * @param attrs
      */
@@ -94,7 +92,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param context
      * @param attrs
      * @param defStyle
@@ -161,7 +158,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param lastPositions
      * @return
      */
@@ -200,7 +196,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -266,7 +261,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -376,6 +370,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 显示错误
+     *
      * @param errorShow
      */
     @Override
@@ -429,6 +424,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置加载更多处于加载状态
+     *
      * @param loading
      */
     @Override
@@ -476,6 +472,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置无更多数据
+     *
      * @param loading
      */
     @Override
@@ -542,6 +539,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置线性布局的分割线
+     *
      * @param oritation
      * @param color
      * @param lineWidth
@@ -559,7 +557,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param color
      */
     @Override
@@ -570,7 +567,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param progressColor
      */
     @Override
@@ -582,7 +578,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
 
     /**
-     *
      * @param onItemClickListener
      */
     @Override
@@ -682,7 +677,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         @SuppressLint("WrongConstant")
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             if (holder instanceof FooterHolder) {
                 FooterHolder footerHolder = (FooterHolder) holder;
                 footerHolder.mProgressBar.setProgressColor(mProgressColor);
@@ -715,17 +710,18 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 @Override
                 public void onClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(position);
+                        mOnItemClickListener.onItemClick(holder.itemView, position);
                     }
                 }
             });
+
             holder.itemView.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemLongClick(position);
+                        mOnItemClickListener.onItemLongClick(holder.itemView, position);
                     }
-                    return true;
+                    return false;
                 }
             });
 
@@ -813,6 +809,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 根据header的ViewType判断是哪个header
+         *
          * @param itemType
          * @return
          */
@@ -825,6 +822,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 判断一个type是否为HeaderType
+         *
          * @param itemViewType
          * @return
          */
@@ -848,6 +846,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 设置加载更多的字体的颜色
+         *
          * @param color
          */
         public void setLoadingTextColor(int color) {
@@ -857,6 +856,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 设置进度条的颜色
+         *
          * @param color
          */
         public void setProgressColor(int color) {
@@ -907,10 +907,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 点击事件
+         *
          * @param onItemClickListener
          */
-        public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener){
-            this.mOnItemClickListener=onItemClickListener;
+        public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener) {
+            this.mOnItemClickListener = onItemClickListener;
         }
 
         public class FooterHolder extends ViewHolder {
