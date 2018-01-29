@@ -18,7 +18,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.0.1'
+	compile 'com.github.MrGaoGang:LucklyRecyclerView:v1.2.0'
 }
 ```
 <br>
