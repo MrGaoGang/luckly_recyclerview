@@ -244,6 +244,12 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     }
 
     @Override
+    public void setFooterVisiable(boolean visiable){
+        mLRecyclerView.setFooterVisiable(visiable);
+
+    }
+
+    @Override
     public void addGridDivider() {
         mLRecyclerView.addGridDivider();
     }

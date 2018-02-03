@@ -23,6 +23,7 @@ import com.mrgao.luckrecyclerview.LucklyRecyclerView;
 import com.mrgao.luckrecyclerview.R;
 import com.mrgao.luckrecyclerview.decoration.LRecyclerViewItemDivider;
 import com.mrgao.luckrecyclerview.interfaces.LuckRecyclerViewInterface;
+import com.mrgao.luckrecyclerview.utils.ScreenUtils;
 import com.mrgao.luckrecyclerview.views.TwoFishView;
 
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                         lastItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                         itemCount = linearLayoutManager.getItemCount();
 
+
                     } else if (manager instanceof GridLayoutManager) {
                         GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
                         //GridLayoutManager判断上拉加载还没有做
@@ -155,6 +157,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             }
         });
+
+
     }
 
     /**
@@ -577,6 +581,14 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
 
+    @Override
+    public void setFooterVisiable(boolean visiable) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setFooterVisiable(visiable);
+        }
+    }
+
+
     /**
      * @param onItemClickListener
      */
@@ -586,6 +598,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             mWrapAdapter.setOnItemClickListener(onItemClickListener);
         }
     }
+
 
     /**
      * 检查是否应该为空
@@ -605,6 +618,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      * 监听适配器的数据变化的
      */
     private class DataObserver extends RecyclerView.AdapterDataObserver {
+        @SuppressLint("WrongConstant")
         @Override
         public void onChanged() {
             if (mWrapAdapter != null) {
@@ -624,6 +638,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                     checkIfEmpty();
                 }
             }
+
 
         }
     }
@@ -655,6 +670,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         private int mProgressColor = Color.RED;
 
+        private boolean isFooterVisiable = true;
         private LucklyRecyclerView.OnItemClickListener mOnItemClickListener;
 
         public LoadMoreWrapAdapter(Adapter adapter) {
@@ -680,19 +696,28 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             if (holder instanceof FooterHolder) {
                 FooterHolder footerHolder = (FooterHolder) holder;
-                footerHolder.mProgressBar.setProgressColor(mProgressColor);
-                footerHolder.mTextView.setTextColor(mLoadingTextColor);
-                if (mFooterState == LOADING_COMPLETE) {
-                    footerHolder.mProgressBar.setVisibility(GONE);
-                    footerHolder.mTextView.setText(mMoreLoadingComplete);
-                } else if (mFooterState == LOADING) {
-                    footerHolder.mProgressBar.setVisibility(VISIBLE);
-                    footerHolder.mTextView.setText(mMoreLoading);
+                if (isFooterVisiable) {
+                   if (!isLittleDataHideFooter(position,holder.itemView)){
+                       footerHolder.itemView.setVisibility(VISIBLE);
+                       footerHolder.mProgressBar.setProgressColor(mProgressColor);
+                       footerHolder.mTextView.setTextColor(mLoadingTextColor);
+                       if (mFooterState == LOADING_COMPLETE) {
+                           footerHolder.mProgressBar.setVisibility(GONE);
+                           footerHolder.mTextView.setText(mMoreLoadingComplete);
+                       } else if (mFooterState == LOADING) {
+                           footerHolder.mProgressBar.setVisibility(VISIBLE);
+                           footerHolder.mTextView.setText(mMoreLoading);
 
-                } else if (mFooterState == LOADING_END) {
-                    footerHolder.mProgressBar.setVisibility(GONE);
-                    footerHolder.mTextView.setText(mMoreLoadingEnd);
+                       } else if (mFooterState == LOADING_END) {
+                           footerHolder.mProgressBar.setVisibility(GONE);
+                           footerHolder.mTextView.setText(mMoreLoadingEnd);
+                       }
+                   }
+
+                } else {
+                    footerHolder.itemView.setVisibility(INVISIBLE);
                 }
+
 
             } else if (holder instanceof HeaderViewHolder) {
 
@@ -724,6 +749,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                     return false;
                 }
             });
+
+
+            if (isFooterVisiable) {
+
+            }
+
 
         }
 
@@ -786,6 +817,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             LayoutManager layoutManager = recyclerView.getLayoutManager();
+
+
             if (layoutManager instanceof GridLayoutManager) {
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
                 final int spanCount = gridLayoutManager.getSpanCount();
@@ -806,6 +839,30 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             mAdapter.onAttachedToRecyclerView(recyclerView);
         }
 
+
+        /**
+         * 当数据比较少的时候，没有到达屏幕的最下方，那么久不显示footer
+         *
+         * @param position
+         * @param lastVisiableView
+         */
+        @SuppressLint("WrongConstant")
+        private boolean isLittleDataHideFooter(int position, View lastVisiableView) {
+            if (position == getItemCount() - 1) {
+                if (lastVisiableView != null) {
+                    if (computeVerticalScrollRange() < ScreenUtils.getScreenHeight(getContext())) {
+                        lastVisiableView.setVisibility(INVISIBLE);
+                        return true;
+                    } else {
+                        lastVisiableView.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                }
+            }
+
+            return false;
+
+        }
 
         /**
          * 根据header的ViewType判断是哪个header
@@ -861,6 +918,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
          */
         public void setProgressColor(int color) {
             this.mProgressColor = color;
+            notifyItemRangeChanged(getItemCount() - 1, 1);
+        }
+
+        public void setFooterVisiable(boolean visiable) {
+            isFooterVisiable = visiable;
             notifyItemRangeChanged(getItemCount() - 1, 1);
         }
 

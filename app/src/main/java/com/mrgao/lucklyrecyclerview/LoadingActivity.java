@@ -51,7 +51,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
 
         List<String> strings = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 7; i++) {
             strings.add("数据" + i);
         }
         dataAdapter.addAll(strings);
@@ -67,8 +67,8 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setEmptyView(R.layout.view_empty);
         //添加headerView
         //mLRecyclerView.addHeaderView(R.layout.header_view);
-        //改变下方加载进度的字体颜色
-        mLRecyclerView.setLoadingTextColor(Color.BLUE);
+        //改变下方加载进度的字体颜色,注意在设置颜色的时候有，mainColor
+        mLRecyclerView.setLoadingTextColor(getResources().getColor(R.color.main_color));
         //改变下方加载进度条的颜色
         mLRecyclerView.setLoadingProgressColor(Color.BLUE);
         //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
@@ -80,11 +80,13 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
             @Override
             public void onItemLongClick(View view, int position) {
-                TextView textView=(TextView) view.findViewById(R.id.item);
+                TextView textView = (TextView) view.findViewById(R.id.item);
                 textView.setText("长按");
                 Log.i(TAG, "长按--->" + position);
             }
         });
+
+
 
 
     }

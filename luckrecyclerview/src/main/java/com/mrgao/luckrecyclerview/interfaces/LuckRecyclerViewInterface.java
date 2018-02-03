@@ -78,5 +78,7 @@ public interface LuckRecyclerViewInterface {
 
     void setLoadingProgressColor(int progressColor);
 
+    void setFooterVisiable(boolean visiable);
+
     void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener);
 }
