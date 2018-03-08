@@ -25,6 +25,11 @@
             android:layout_height="wrap_content"
             android:text="显示空视图"/>
 
+        <Button
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分组显示"/>
     </LinearLayout>
 
 

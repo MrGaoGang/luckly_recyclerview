@@ -1,12 +1,13 @@
 package com.mrgao.lucklyrecyclerview;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
     LucklyRecyclerView mLRecyclerView;
 
     DataAdapter dataAdapter;
-    Button mEmptyBtn, mErrorBtn;
+    Button mEmptyBtn, mErrorBtn,group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +33,10 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView = $(R.id.yRecyclerView);
         mEmptyBtn = $(R.id.showEmpty);
         mErrorBtn = $(R.id.showError);
+        group = $(R.id.group);
         mErrorBtn.setOnClickListener(this);
         mEmptyBtn.setOnClickListener(this);
+        group.setOnClickListener(this);
 
         //添加加载更多监听
         mLRecyclerView.setLoadMoreListener(this);
@@ -66,11 +69,13 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
         //添加headerView
+        View head= LayoutInflater.from(this).inflate(R.layout.header_view,mLRecyclerView,false);
+        mLRecyclerView.addHeaderView(head);
         //mLRecyclerView.addHeaderView(R.layout.header_view);
-        //改变下方加载进度的字体颜色,注意在设置颜色的时候有，mainColor
-        mLRecyclerView.setLoadingTextColor(getResources().getColor(R.color.main_color));
+        //改变下方加载进度的字体颜色,注意在设置颜色的时候有，mainColor,要在设置了Adapter之后使用
+        mLRecyclerView.setLoadingTextColor(getResources().getColor(R.color.colorAccent));
         //改变下方加载进度条的颜色
-        mLRecyclerView.setLoadingProgressColor(Color.BLUE);
+        mLRecyclerView.setLoadingProgressColor(getResources().getColor(R.color.colorAccent));
         //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
         mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
             @Override
@@ -132,6 +137,9 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
             case R.id.showError:
                 mLRecyclerView.showError(true);
+                break;
+            case R.id.group:
+                startActivity(new Intent(LoadingActivity.this,GroupActivity.class));
                 break;
 
         }

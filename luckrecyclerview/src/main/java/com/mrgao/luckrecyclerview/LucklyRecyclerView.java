@@ -1,5 +1,6 @@
 package com.mrgao.luckrecyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.mrgao.luckrecyclerview.adapter.BaseGroupAdapter;
 import com.mrgao.luckrecyclerview.interfaces.LuckRecyclerViewInterface;
 import com.mrgao.luckrecyclerview.interfaces.LucklyRecyclerSwpieInterface;
 import com.mrgao.luckrecyclerview.recyclerview.LRecyclerView;
@@ -26,8 +28,11 @@ import java.util.List;
  */
 
 public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerViewInterface, LucklyRecyclerSwpieInterface {
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    LRecyclerView mLRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private LRecyclerView mLRecyclerView;
+    public static final int NORMAL = 0;//正常
+    public static final int GROUP = 1;//分组情况
+    private int mRecyclerViewType = NORMAL;
 
     public LucklyRecyclerView(Context context) {
         super(context);
@@ -44,6 +49,7 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         initView();
     }
 
+    @SuppressLint("WrongConstant")
     private void initView() {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         this.setOrientation(VERTICAL);
@@ -145,6 +151,12 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
 
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {
+        
+        if (mRecyclerViewType == GROUP) {
+            if (!(adapter instanceof BaseGroupAdapter)){
+                return;
+            }
+        }
         mLRecyclerView.setAdapter(adapter);
     }
 
@@ -244,7 +256,7 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     }
 
     @Override
-    public void setFooterVisiable(boolean visiable){
+    public void setFooterVisiable(boolean visiable) {
         mLRecyclerView.setFooterVisiable(visiable);
 
     }
@@ -277,6 +289,16 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     @Override
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mLRecyclerView.setOnItemClickListener(onItemClickListener);
+    }
+
+
+    /**
+     * 设置显示的类型：正常或者分组
+     *
+     * @param recyclerViewType
+     */
+    public void setRecyclerViewType(int recyclerViewType) {
+        mRecyclerViewType = recyclerViewType;
     }
 
     /**
