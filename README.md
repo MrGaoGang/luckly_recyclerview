@@ -6,7 +6,8 @@
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/main.gif) 
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/group.gif) 
 <br>
-如何获取:[![](https://jitpack.io/v/MrGaoGang/LucklyRecyclerView.svg)](https://jitpack.io/#MrGaoGang/LucklyRecyclerView)<br>
+如何获取:[![](https://jitpack.io/v/mrgaogang/luckly_recyclerview.svg)](https://jitpack.io/#mrgaogang/luckly_recyclerview)
+<br>
 第一步：在项目的build.gradle中添加<br>
 ```Java
  allprojects {
