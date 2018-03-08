@@ -183,7 +183,11 @@
 
 ```
 <br>
+
+
 在使用点击事件的时候要注意判断是否为Parent：<br>
+
+
 ```Java
    luckRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
             @Override
