@@ -4,6 +4,7 @@
 
 效果图：
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/main.gif) 
+![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/group.gif) 
 <br>
 如何获取:[![](https://jitpack.io/v/MrGaoGang/LucklyRecyclerView.svg)](https://jitpack.io/#MrGaoGang/LucklyRecyclerView)<br>
 第一步：在项目的build.gradle中添加<br>
@@ -18,7 +19,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v1.3.0'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v1.4.0'
 }
 ```
 <br>
