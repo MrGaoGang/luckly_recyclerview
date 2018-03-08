@@ -205,5 +205,24 @@
             }
         });
 ```
+
+
+### 3、常用的几个方法
+1、获取child在parent下的index <br>
+
+```Java
+mGroupAdapter.getChildIndexForParent(position);
+```
+2、获取parent的index <br>
+
+```Java
+mGroupAdapter.getParentIndexFromChild(position);
+```
+3、判断当前position是否为parentView <br>
+
+```Java
+mGroupAdapter.isParentView(position);
+```
+
 ## 三、具体如何使用请看例子
 [LucklyRecyclerView](https://github.com/MrGaoGang/LucklyRecyclerView/tree/master/app/src/main/java/com/mrgao/lucklyrecyclerview)
