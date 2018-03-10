@@ -50,7 +50,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
        // mLRecyclerView.addGridDivider();
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-       // mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
+        mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
         dataAdapter = new DataAdapter();
 
@@ -67,7 +67,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mYRecyclerView.setEmptyView(empty);*/
 
         //设置下拉刷新的时长
-        //mLRecyclerView.setDuration(4000);
+        mLRecyclerView.setDuration(4000);
         //添加错误的View
         mLRecyclerView.setErrorView(R.layout.error_view);
         //添加空View
@@ -150,7 +150,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
     @Override
     public void onRefresh() {
-       // mLRecyclerView.setRefreshEnable(true);
+       mLRecyclerView.setRefreshEnable(true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -161,7 +161,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 }
                 dataAdapter.addAll(strings);
 
-               // mLRecyclerView.setRefreshComplete();
+                mLRecyclerView.setRefreshComplete();
             }
         }, 6000);
     }
