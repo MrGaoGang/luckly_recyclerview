@@ -1,5 +1,5 @@
 ﻿# LucklyRecyclerView
-结合了SwipeRefreshLayout和RecyclerView,将其封装在一起。方便使用；上拉加载更多，下拉刷新
+使用RecyclerView封装headerview,footerView,并实现上拉加载更多，下拉刷新。
 ====
 
 效果图：
@@ -99,6 +99,8 @@
 	mLRecyclerView.setLoadingTextColor(Color.BLUE);
 	//改变下方加载进度条的颜色
 	mLRecyclerView.setLoadingProgressColor(Color.BLUE);
+	//修改下拉刷新颜色
+	mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 ```
 #### 8、设置监听事件<br>
 ```Java
@@ -116,7 +118,7 @@
 	 });
 ```
 
-### 9、设置下拉刷新在不同的状态<br>
+### 9、设置上拉加载和下拉刷新在不同的状态<br>
 ```Java
  @Override
     public void onLoadMore() {
@@ -144,6 +146,30 @@
         }, 2000);
     }
 ```
+
+
+```Java
+   @Override
+    public void onRefresh() {
+        mLRecyclerView.setRefreshEnable(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dataAdapter.clearAll();
+                List<String> strings = new ArrayList<>();
+                for (int i = 0; i < 30; i++) {
+                    strings.add("数据" + i);
+                }
+                dataAdapter.addAll(strings);
+
+            
+                mLRecyclerView.setRefreshComplete();
+            }
+        }, 5000);
+    }
+```
+
+
 ## 二、如何实现分组
 
 ### 1、luckRecyclerView.setRecyclerViewType(LucklyRecyclerView.GROUP);
