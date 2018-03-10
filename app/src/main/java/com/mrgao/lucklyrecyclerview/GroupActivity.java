@@ -39,6 +39,7 @@ public class GroupActivity extends AppCompatActivity {
         luckRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         luckRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        luckRecyclerView.setRecyclerViewType(LucklyRecyclerView.GROUP);
         luckRecyclerView.addLinearDivider(LucklyRecyclerView.VERTICAL,getResources().getColor(R.color.grey_200),1);
         mGroupAdapter=new GroupAdapter(this);
         luckRecyclerView.setAdapter(mGroupAdapter);

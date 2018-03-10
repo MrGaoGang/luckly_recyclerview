@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">LuckRecyclerView</string>
+
+
+    <string name="normal">下拉刷新</string>
+    <string name="refresh_to_release">释放立即刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_done">刷新完成</string>
 </resources>

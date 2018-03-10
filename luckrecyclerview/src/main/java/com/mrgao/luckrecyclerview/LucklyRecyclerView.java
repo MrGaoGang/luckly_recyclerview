@@ -3,7 +3,6 @@ package com.mrgao.luckrecyclerview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.mrgao.luckrecyclerview.adapter.BaseGroupAdapter;
 import com.mrgao.luckrecyclerview.interfaces.LuckRecyclerViewInterface;
-import com.mrgao.luckrecyclerview.interfaces.LucklyRecyclerSwpieInterface;
 import com.mrgao.luckrecyclerview.recyclerview.LRecyclerView;
 
 import java.util.List;
@@ -27,8 +25,8 @@ import java.util.List;
  * Description:
  */
 
-public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerViewInterface, LucklyRecyclerSwpieInterface {
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerViewInterface {
+
     private LRecyclerView mLRecyclerView;
     public static final int NORMAL = 0;//正常
     public static final int GROUP = 1;//分组情况
@@ -55,71 +53,45 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         this.setOrientation(VERTICAL);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.luck_recyclerview_layout, this, false);
         this.addView(view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
-        mSwipeRefreshLayout.setEnabled(false);
+
 
         mLRecyclerView = (LRecyclerView) view.findViewById(R.id.lrecyclerview);
     }
 
 
     @Override
-    public boolean isRefreshing() {
-        return mSwipeRefreshLayout.isRefreshing();
-    }
-
-    @Override
-    public void setColorSchemeResources(int... colorResIds) {
-        mSwipeRefreshLayout.setColorSchemeResources(colorResIds);
-    }
-
-    @Override
-    public void setColorSchemeColors(int... colors) {
-        mSwipeRefreshLayout.setColorSchemeColors(colors);
-    }
-
-    @Override
-    public void setRefreshing(boolean refreshing) {
-        mSwipeRefreshLayout.setRefreshing(refreshing);
-    }
-
-    @Override
-    public void setSwipeRefreshLayoutEnable(boolean enable) {
-        mSwipeRefreshLayout.setEnabled(enable);
-    }
-
-    @Override
-    public SwipeRefreshLayout getSwipeRefreshLayout() {
-        return mSwipeRefreshLayout;
-    }
-
-    @Override
     public void setOnRefreshListener(final OnRefreshListener listener) {
         if (listener != null) {
-            mSwipeRefreshLayout.setEnabled(true);
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    //包装了一下，是为了将LRecyvlerView还原
-                    mLRecyclerView.reset();
-                    listener.onRefresh();
-                }
-            });
+            mLRecyclerView.setRefreshEnable(true);
+            //包装了一下，是为了将LRecyvlerView还原
+            mLRecyclerView.reset();
+            mLRecyclerView.setOnRefreshListener(listener);
         }
     }
 
     @Override
-    public void setProgressViewOffset(boolean scale, int start, int end) {
-        mSwipeRefreshLayout.setProgressViewOffset(scale, start, end);
+    public void refresh() {
+        mLRecyclerView.refresh();
     }
 
     @Override
-    public void setProgressViewEndTarget(boolean scale, int end) {
-        mSwipeRefreshLayout.setProgressViewEndTarget(scale, end);
+    public void setRefreshEnable(boolean enable) {
+        mLRecyclerView.setRefreshEnable(true);
     }
 
     @Override
-    public void setProgressBackgroundColor(int colorRes) {
-        mSwipeRefreshLayout.setProgressBackgroundColor(colorRes);
+    public void setRefreshComplete() {
+        mLRecyclerView.setRefreshComplete();
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        mLRecyclerView.setDuration(duration);
+    }
+
+    @Override
+    public void setRefreshColor(int color) {
+        mLRecyclerView.setRefreshColor(color);
     }
 
 
@@ -151,9 +123,9 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
 
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {
-        
+
         if (mRecyclerViewType == GROUP) {
-            if (!(adapter instanceof BaseGroupAdapter)){
+            if (!(adapter instanceof BaseGroupAdapter)) {
                 return;
             }
         }

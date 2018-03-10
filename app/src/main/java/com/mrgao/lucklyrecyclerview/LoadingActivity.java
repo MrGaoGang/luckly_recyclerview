@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mrgao.lucklyrecyclerview.adapter.DataAdapter;
 import com.mrgao.luckrecyclerview.LucklyRecyclerView;
+import com.mrgao.luckrecyclerview.recyclerview.LRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
     LucklyRecyclerView mLRecyclerView;
 
     DataAdapter dataAdapter;
-    Button mEmptyBtn, mErrorBtn,group;
+    Button mEmptyBtn, mErrorBtn, group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,11 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
         mLRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //封装好了的线性分割线,也可以使用setGridDivider()；使用以及封装好的网格式布局，在使用这句话之前，请先设置好LayoutManager
-        //mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
-        mLRecyclerView.addLinearDivider(LucklyRecyclerView.VERTICAL);
+        mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
+       // mLRecyclerView.addGridDivider();
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
         dataAdapter = new DataAdapter();
 
@@ -64,12 +66,14 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         View empty = LayoutInflater.from(this).inflate(R.layout.view_empty, null, false);
         mYRecyclerView.setEmptyView(empty);*/
 
+        //设置下拉刷新的时长
+        mLRecyclerView.setDuration(4000);
         //添加错误的View
         mLRecyclerView.setErrorView(R.layout.error_view);
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
         //添加headerView
-        View head= LayoutInflater.from(this).inflate(R.layout.header_view,mLRecyclerView,false);
+        View head = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
         mLRecyclerView.addHeaderView(head);
         //mLRecyclerView.addHeaderView(R.layout.header_view);
         //改变下方加载进度的字体颜色,注意在设置颜色的时候有，mainColor,要在设置了Adapter之后使用
@@ -90,8 +94,6 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 Log.i(TAG, "长按--->" + position);
             }
         });
-
-
 
 
     }
@@ -139,7 +141,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 mLRecyclerView.showError(true);
                 break;
             case R.id.group:
-                startActivity(new Intent(LoadingActivity.this,GroupActivity.class));
+                startActivity(new Intent(LoadingActivity.this, GroupActivity.class));
                 break;
 
         }
@@ -148,6 +150,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
     @Override
     public void onRefresh() {
+        mLRecyclerView.setRefreshEnable(true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -157,9 +160,10 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                     strings.add("数据" + i);
                 }
                 dataAdapter.addAll(strings);
+
                 //在刷新之后要设置刷新不可见
-                mLRecyclerView.setRefreshing(false);
+                mLRecyclerView.setRefreshComplete();
             }
-        }, 2000);
+        }, 6000);
     }
 }
