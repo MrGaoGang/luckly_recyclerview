@@ -161,7 +161,6 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 }
                 dataAdapter.addAll(strings);
 
-                //在刷新之后要设置刷新不可见
                 mLRecyclerView.setRefreshComplete();
             }
         }, 6000);
