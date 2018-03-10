@@ -57,7 +57,7 @@ public class GroupActivity extends AppCompatActivity {
         accoutBean.setImageResourceId(R.mipmap.b_jiangjin);
         accoutBean.setMoney("2000.00");
         accoutBean.setTime("2018-1-1");
-        accoutBean.setAccountType(getIntent().getStringExtra("data"));
+        accoutBean.setAccountType("储蓄卡");
         accoutBean.setMoneyType("现金");
         accoutBean.setDescript("给别人借的钱");
         accoutBean.setPeople("自己");
@@ -68,7 +68,7 @@ public class GroupActivity extends AppCompatActivity {
         accoutBean1.setTime("2018-1-1");
         accoutBean1.setDescript("今天去武汉的飞机票");
         accoutBean1.setPeople("母亲");
-        accoutBean1.setAccountType(getIntent().getStringExtra("data"));
+        accoutBean.setAccountType("储蓄卡");
         accoutBean1.setMoneyType("交通");
 
         List<AccoutBean> list=new ArrayList<>();

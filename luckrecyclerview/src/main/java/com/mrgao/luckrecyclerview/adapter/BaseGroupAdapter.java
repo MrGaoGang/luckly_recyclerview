@@ -19,9 +19,9 @@ import java.util.List;
 public abstract class BaseGroupAdapter<A extends RecyclerView.ViewHolder, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //第一层
-    private static final int TYPE_PARENTE = 1;
+    private static final int TYPE_PARENTE = -10001;
     //第二层
-    private static final int TYPE_CHILD = 0;
+    private static final int TYPE_CHILD = -10002;
     //记录parent的position
     private List<Integer> mParentPosition = new ArrayList<>();
 

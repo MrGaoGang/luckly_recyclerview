@@ -134,8 +134,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                         itemCount = linearLayoutManager.getItemCount();
 
 
-
-
                     } else if (manager instanceof GridLayoutManager) {
                         GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
                         //GridLayoutManager判断上拉加载还没有做
@@ -851,21 +849,23 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             } else if (holder instanceof HeaderViewHolder) {
 
-
             } else {
                 //注意，此处必须要讲position减去头部的个数
                 if (mAdapter != null) {
-                    if (position - mHeaderViews.size() < mAdapter.getItemCount()) {
-                        mAdapter.onBindViewHolder(holder, position - mHeaderViews.size());
+                    if (position - mHeaderViews.size() - 1 < mAdapter.getItemCount()) {
+                        mAdapter.onBindViewHolder(holder, position - mHeaderViews.size() - 1);
                     }
                 }
 
             }
+
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(holder.itemView, position);
+                    if (mOnItemClickListener != null ) {
+                        //减掉1是为了减掉顶部下拉刷新，设置为不可显示
+                        mOnItemClickListener.onItemClick(holder.itemView, position - 1);
+
                     }
                 }
             });
@@ -874,17 +874,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 @Override
                 public boolean onLongClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemLongClick(holder.itemView, position);
+                        mOnItemClickListener.onItemLongClick(holder.itemView, position - 1);
                     }
                     return false;
                 }
             });
-
-
-            if (isFooterVisiable) {
-
-            }
-
 
         }
 
@@ -924,7 +918,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             if (position == 0) {//最开始的为下拉刷新的布局
                 return HEADER_REFRESH_TYPE;
             }
-            if (position <= mHeaderViews.size()) {
+            if (position >= 1 && position < mHeaderViews.size() + 1) {
                 return getHeaderTypeByPosition(position - 1);
             }
             if (position == getItemCount() - 1) {
@@ -933,8 +927,9 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             int adapterCount;
             if (mAdapter != null) {
                 adapterCount = mAdapter.getItemCount();
-                if (position - mHeaderViews.size() - 1 < adapterCount) {
-                    int type = mAdapter.getItemViewType(position);
+                int realPosition = position - getHeaderCount() - 1;
+                if (realPosition < adapterCount) {
+                    int type = mAdapter.getItemViewType(realPosition);
                     if (type >= HEADER_TYPE_SIZE) {
                         throw new IndexOutOfBoundsException("LucklyRecyclerView require itemType below 20000 ");
                     }
@@ -955,7 +950,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             LayoutManager layoutManager = recyclerView.getLayoutManager();
-
 
             if (layoutManager instanceof GridLayoutManager) {
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;

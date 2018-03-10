@@ -55,6 +55,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public int getItemCount() {
         return mStringList.size();
     }
