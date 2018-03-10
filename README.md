@@ -4,8 +4,10 @@
 
 效果图：
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/main.gif) 
+![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/group.gif) 
 <br>
-如何获取:[![](https://jitpack.io/v/MrGaoGang/LucklyRecyclerView.svg)](https://jitpack.io/#MrGaoGang/LucklyRecyclerView)<br>
+如何获取:[![](https://jitpack.io/v/mrgaogang/luckly_recyclerview.svg)](https://jitpack.io/#mrgaogang/luckly_recyclerview)
+<br>
 第一步：在项目的build.gradle中添加<br>
 ```Java
  allprojects {
@@ -18,7 +20,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v1.3.0'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v1.4.0'
 }
 ```
 <br>
@@ -142,6 +144,86 @@
         }, 2000);
     }
 ```
+## 二、如何实现分组
 
-## 二、具体如何使用请看例子
+### 1、luckRecyclerView.setRecyclerViewType(LucklyRecyclerView.GROUP);
+
+### 2、重写Adapter继承基类BaseGroupAdapter
+<br>需要重写的几个方法：
+```Java
+  /**
+     * 第一层的数量
+     *
+     * @return
+     */
+    public abstract int getParentCount();
+
+    /**
+     * 每一个parent下的child的数量
+     *
+     * @param parentPosition
+     * @return
+     */
+    public abstract int getChildCountForParent(int parentPosition);
+
+    public abstract A onCreateParentViewHolder(ViewGroup parent, int viewType);
+
+    public abstract B onCreateChildViewHolder(ViewGroup parent, int viewType);
+
+    public abstract void onBindParentViewHolder(A holder, int position);
+
+    /**
+     * 分别是hoder,parent的位置（全局的位置）
+     * child在parent中的index(不是position)
+     *
+     * @param holder
+     * @param parentPosition
+     * @param childIndexForParent
+     */
+    public abstract void onBindChildViewHolder(B holder, int parentPosition, int childIndexForParent);
+
+```
+<br>
+
+
+在使用点击事件的时候要注意判断是否为Parent：<br>
+
+
+```Java
+   luckRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View rootView, int position) {
+                if (mGroupAdapter.isParentView(position)){
+                    mGroupAdapter.showChild(rootView);
+                }else {
+                    Toast.makeText(getApplicationContext(),"点击了第"+mGroupAdapter.getParentIndexFromChild(position)+"个parent的"+mGroupAdapter.getChildIndexForParent(position),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View rootView, int position) {
+
+            }
+        });
+```
+
+
+### 3、常用的几个方法
+1、获取child在parent下的index <br>
+
+```Java
+mGroupAdapter.getChildIndexForParent(position);
+```
+2、获取parent的index <br>
+
+```Java
+mGroupAdapter.getParentIndexFromChild(position);
+```
+3、判断当前position是否为parentView <br>
+
+```Java
+mGroupAdapter.isParentView(position);
+```
+
+## 三、具体如何使用请看例子
 [LucklyRecyclerView](https://github.com/MrGaoGang/LucklyRecyclerView/tree/master/app/src/main/java/com/mrgao/lucklyrecyclerview)
