@@ -46,16 +46,15 @@ public abstract class BaseGroupAdapter<A extends RecyclerView.ViewHolder, B exte
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (isParentView(position)) {
-            onBindParentViewHolder((A) holder, mParentPosition.indexOf(position));
-            return;
-        } else {
-
-           /* int parentIndex = getParentIndexFromChild(position);
-            int parentPosition = mParentPosition.get(parentIndex);
-            int childIndex = position - parentPosition - 1;*/
-            onBindChildViewHolder((B) holder, getParentIndexFromChild(position), getChildIndexForParent(position));
+        if (getParentCount() != 0) {
+            if (isParentView(position)) {
+                onBindParentViewHolder((A) holder, mParentPosition.indexOf(position));
+                return;
+            } else {
+                onBindChildViewHolder((B) holder, getParentIndexFromChild(position), getChildIndexForParent(position));
+            }
         }
+
     }
 
     @Override
@@ -85,7 +84,11 @@ public abstract class BaseGroupAdapter<A extends RecyclerView.ViewHolder, B exte
 
             count += getChildCountForParent(i);
         }
-        return count + 1;
+        if (getParentCount() != 0) {
+            return count + 1;
+        } else {
+            return 0;
+        }
     }
 
 
@@ -96,12 +99,17 @@ public abstract class BaseGroupAdapter<A extends RecyclerView.ViewHolder, B exte
      * @return
      */
     public int getParentIndexFromChild(int position) {
-        for (int i = 0; i < mParentPosition.size(); i++) {
-            if (mParentPosition.get(i) > position) {
-                return i - 1;
+        if (mParentPosition.size() != 0) {
+            for (int i = 0; i < mParentPosition.size(); i++) {
+                if (mParentPosition.get(i) > position) {
+                    return i - 1;
+                }
             }
+            return mParentPosition.size() - 1;
+        } else {
+            return 0;
         }
-        return mParentPosition.size() - 1;
+
     }
 
     /**
@@ -111,9 +119,14 @@ public abstract class BaseGroupAdapter<A extends RecyclerView.ViewHolder, B exte
      * @return
      */
     public int getChildIndexForParent(int position) {
-        int parentPosition = mParentPosition.get(getParentIndexFromChild(position));
-        int childIndex = position - parentPosition - 1;
-        return childIndex;
+        if (mParentPosition.size() != 0) {
+            int parentPosition = mParentPosition.get(getParentIndexFromChild(position));
+            int childIndex = position - parentPosition - 1;
+            return childIndex;
+        } else {
+            return 0;
+        }
+
     }
 
 

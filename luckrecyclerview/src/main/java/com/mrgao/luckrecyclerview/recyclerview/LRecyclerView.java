@@ -730,7 +730,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private void checkIfEmpty() {
         if (mEmptyView != null && mWrapAdapter != null) {
             final boolean emptyViewVisible =
-                    mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 1;
+                    mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 2;
             mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : GONE);
             setVisibility(emptyViewVisible ? GONE : VISIBLE);
         }
@@ -862,7 +862,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mOnItemClickListener != null ) {
+                    if (mOnItemClickListener != null) {
                         //减掉1是为了减掉顶部下拉刷新，设置为不可显示
                         mOnItemClickListener.onItemClick(holder.itemView, position - 1);
 

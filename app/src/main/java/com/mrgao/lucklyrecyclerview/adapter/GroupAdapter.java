@@ -48,6 +48,9 @@ public class GroupAdapter extends BaseGroupAdapter<GroupAdapter.GroupViewHolder,
 
     @Override
     public int getChildCountForParent(int parentPosition) {
+        if (getParentCount() == 0) {
+            return 0;
+        }
         int count = mContent.get(parentPosition).childList.size();
 
         if (!mBooleanMap.get(parentPosition)) {
@@ -103,6 +106,7 @@ public class GroupAdapter extends BaseGroupAdapter<GroupAdapter.GroupViewHolder,
 
     /**
      * 显示或者隐藏child
+     *
      * @param view
      */
     public void showChild(View view) {

@@ -39,6 +39,7 @@ public class GroupActivity extends AppCompatActivity {
         luckRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         luckRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        luckRecyclerView.setEmptyView(R.layout.view_empty);
         luckRecyclerView.setRecyclerViewType(LucklyRecyclerView.GROUP);
         luckRecyclerView.addLinearDivider(LucklyRecyclerView.VERTICAL,getResources().getColor(R.color.grey_200),1);
         mGroupAdapter=new GroupAdapter(this);
@@ -96,7 +97,6 @@ public class GroupActivity extends AppCompatActivity {
         list1.add(groupBean1);
         list1.add(groupBean);
         list1.add(groupBean1);
-
         mGroupAdapter.addAll(list1);
     }
 
