@@ -1,5 +1,5 @@
 ﻿# LucklyRecyclerView
-使用RecyclerView封装headerview,footerView,并实现上拉加载更多，下拉刷新。
+使用RecyclerView封装headerview,footerView,并实现上拉加载更多，下拉刷新，分组功能
 ====
 
 效果图：
