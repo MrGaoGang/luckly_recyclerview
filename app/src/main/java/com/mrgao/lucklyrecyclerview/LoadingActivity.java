@@ -35,6 +35,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mEmptyBtn = $(R.id.showEmpty);
         mErrorBtn = $(R.id.showError);
         group = $(R.id.group);
+
         mErrorBtn.setOnClickListener(this);
         mEmptyBtn.setOnClickListener(this);
         group.setOnClickListener(this);
@@ -72,6 +73,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setErrorView(R.layout.error_view);
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
+        mLRecyclerView.setOnClickEmptyOrErrorToRefresh(true);
         //添加headerView
         View head = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
         mLRecyclerView.addHeaderView(head);
@@ -162,7 +164,8 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 dataAdapter.addAll(strings);
 
                 mLRecyclerView.setRefreshComplete();
+
             }
-        }, 6000);
+        }, 3000);
     }
 }

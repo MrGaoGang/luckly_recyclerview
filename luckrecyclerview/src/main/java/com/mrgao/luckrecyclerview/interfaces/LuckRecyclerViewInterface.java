@@ -94,4 +94,6 @@ public interface LuckRecyclerViewInterface {
 
     void setRefreshColor(int color);
 
+    void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh);
+
 }

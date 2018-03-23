@@ -95,6 +95,11 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     }
 
 
+    @Override
+    public void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh) {
+        mLRecyclerView.setOnClickEmptyOrErrorToRefresh(emptyToRefresh);
+    }
+
     /*下面是关于RecyckerView的*/
     @Override
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
@@ -305,5 +310,12 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         void onItemClick(View rootView, int position);
 
         void onItemLongClick(View rootView, int position);
+    }
+
+
+    public interface OnErrorEmptyClickListener {
+        void onErrorClick(View errorView);
+
+        void onEmptyClick(View emptyView);
     }
 }

@@ -84,6 +84,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private float mLatesY = -1;
     //表示是否可以下拉刷新
     private boolean mCanRefresh = true;
+    //空视图和错误视图显示的点击事件
+    private boolean mOnClickErrorToRefresh = false;
 
     /**
      * @param context
@@ -99,6 +101,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      */
     public LRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+
 
     }
 
@@ -403,6 +406,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public void setEmptyView(View view) {
         if (view != null) {
             mEmptyView = view;
+            mEmptyView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickToRefresh();
+                }
+            });
             addViewToRoot(mEmptyView);
 
         }
@@ -417,7 +426,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     @Override
     public void setEmptyView(int id) {
         mEmptyView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
-        addViewToRoot(mEmptyView);
+        setEmptyView(mEmptyView);
 
     }
 
@@ -430,6 +439,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public void setErrorView(View view) {
         if (view != null) {
             mErrorView = view;
+            mErrorView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickToRefresh();
+                }
+            });
             addViewToRoot(mErrorView);
         }
     }
@@ -453,7 +468,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     @Override
     public void setErrorView(int id) {
         mErrorView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
-        addViewToRoot(mErrorView);
+        setErrorView(mErrorView);
     }
 
 
@@ -722,6 +737,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         mHeaderView.setRefreshColor(color);
     }
 
+    @Override
+    public void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh) {
+        mOnClickErrorToRefresh = emptyToRefresh;
+    }
 
     /**
      * 检查是否应该为空
@@ -762,6 +781,26 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 }
             }
 
+
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    private void onClickToRefresh() {
+        if (mOnClickErrorToRefresh && mErrorView != null && mErrorView.getVisibility() == VISIBLE && mErrorShow == true) {
+            if (mOnRefreshListener != null) {
+                mErrorShow=false;
+                mDataObserver.onChanged();
+                refresh();
+            }
+
+        }
+        if (mOnClickErrorToRefresh && mEmptyView != null && mEmptyView.getVisibility() == VISIBLE) {
+            if (mOnRefreshListener != null) {
+                mEmptyView.setVisibility(GONE);
+                LRecyclerView.this.setVisibility(VISIBLE);
+                refresh();
+            }
 
         }
     }
