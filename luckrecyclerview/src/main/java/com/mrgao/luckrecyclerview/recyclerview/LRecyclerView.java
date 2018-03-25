@@ -14,10 +14,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mrgao.luckrecyclerview.LucklyRecyclerView;
@@ -425,7 +427,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      */
     @Override
     public void setEmptyView(int id) {
-        mEmptyView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
+        mEmptyView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getParent(), false);
         setEmptyView(mEmptyView);
 
     }
@@ -451,11 +453,15 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     private void addViewToRoot(View view) {
         //一定要记得加这句话，这样才会在RecyclerView中添加此布局
-        ViewGroup rootView = (ViewGroup) this.getRootView();
+
+        ViewGroup rootView = (ViewGroup) this.getParent();
         int childCount = rootView.getChildCount();
+
         if (view.getTag() == null) {//避免重复添加EmptyView
             view.setTag(childCount + 1);
-            ((ViewGroup) this.getRootView()).addView(view);
+            FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity= Gravity.CENTER;
+            rootView.addView(view,layoutParams);
             mDataObserver.onChanged();
         }
     }
@@ -467,7 +473,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      */
     @Override
     public void setErrorView(int id) {
-        mErrorView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
+        mErrorView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getParent(), false);
         setErrorView(mErrorView);
     }
 
@@ -750,8 +756,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         if (mEmptyView != null && mWrapAdapter != null) {
             final boolean emptyViewVisible =
                     mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 2;
-            mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : GONE);
-            setVisibility(emptyViewVisible ? GONE : VISIBLE);
+            mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : INVISIBLE);
+            setVisibility(emptyViewVisible ? INVISIBLE : VISIBLE);
         }
     }
 
@@ -764,24 +770,50 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         @Override
         public void onChanged() {
             if (mWrapAdapter != null) {
+
                 mWrapAdapter.notifyDataSetChanged();
             }
             checkIfEmpty();
             if (mErrorView != null) {
                 if (mErrorShow) {
                     if (mEmptyView != null) {
-                        mEmptyView.setVisibility(GONE);
+                        mEmptyView.setVisibility(INVISIBLE);
                     }
                     LRecyclerView.this.setVisibility(INVISIBLE);
                     mErrorView.setVisibility(VISIBLE);
 
                 } else {
-                    mErrorView.setVisibility(GONE);
+                    mErrorView.setVisibility(INVISIBLE);
                     checkIfEmpty();
                 }
             }
 
 
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeInserted(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
         }
     }
 
@@ -789,7 +821,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private void onClickToRefresh() {
         if (mOnClickErrorToRefresh && mErrorView != null && mErrorView.getVisibility() == VISIBLE && mErrorShow == true) {
             if (mOnRefreshListener != null) {
-                mErrorShow=false;
+                mErrorShow = false;
                 mDataObserver.onChanged();
                 refresh();
             }
@@ -797,8 +829,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
         if (mOnClickErrorToRefresh && mEmptyView != null && mEmptyView.getVisibility() == VISIBLE) {
             if (mOnRefreshListener != null) {
-                mEmptyView.setVisibility(GONE);
+                mEmptyView.setVisibility(INVISIBLE);
                 LRecyclerView.this.setVisibility(VISIBLE);
+                if (mErrorView != null) {
+                    mErrorView.setVisibility(INVISIBLE);
+                }
                 refresh();
             }
 
@@ -941,6 +976,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         }
 
+
         @Override
         public long getItemId(int position) {
             if (mAdapter != null && position >= getHeaderCount() + 1) {
@@ -979,10 +1015,29 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         }
 
+        @Override
+        public void registerAdapterDataObserver(AdapterDataObserver observer) {
+            mAdapter.registerAdapterDataObserver(observer);
+        }
 
         @Override
         public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
             mAdapter.onDetachedFromRecyclerView(recyclerView);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+            mAdapter.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public void onViewRecycled(RecyclerView.ViewHolder holder) {
+            mAdapter.onViewRecycled(holder);
+        }
+
+        @Override
+        public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+            return mAdapter.onFailedToRecycleView(holder);
         }
 
         @Override
