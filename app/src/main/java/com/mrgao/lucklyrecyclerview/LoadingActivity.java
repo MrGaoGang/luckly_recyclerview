@@ -44,7 +44,8 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setLoadMoreListener(this);
         //添加下拉刷新监听
         mLRecyclerView.setOnRefreshListener(this);
-
+        //设置空视图/错误视图点击后是否刷新数据
+        mLRecyclerView.setOnClickEmptyOrErrorToRefresh(true);
         mLRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //封装好了的线性分割线,也可以使用setGridDivider()；使用以及封装好的网格式布局，在使用这句话之前，请先设置好LayoutManager
         mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
@@ -73,10 +74,11 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setErrorView(R.layout.error_view);
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
-        mLRecyclerView.setOnClickEmptyOrErrorToRefresh(true);
-        //添加headerView
+
+        //添加headerView,要在设置了Adapter之后才可使用哦
         View head = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
         mLRecyclerView.addHeaderView(head);
+
         //mLRecyclerView.addHeaderView(R.layout.header_view);
         //改变下方加载进度的字体颜色,注意在设置颜色的时候有，mainColor,要在设置了Adapter之后使用
         mLRecyclerView.setLoadingTextColor(getResources().getColor(R.color.colorAccent));

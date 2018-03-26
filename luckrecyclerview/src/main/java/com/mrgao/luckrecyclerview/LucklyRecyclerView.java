@@ -130,10 +130,15 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     public void setAdapter(RecyclerView.Adapter adapter) {
 
         if (mRecyclerViewType == NORMAL) {
-            mLRecyclerView.setAdapter(adapter);
+            if (mLRecyclerView.getAdapter() == null) {
+                mLRecyclerView.setAdapter(adapter);
+            }
+
         } else if (mRecyclerViewType == GROUP) {
             if (adapter instanceof BaseGroupAdapter) {
-                mLRecyclerView.setAdapter(adapter);
+                if (mLRecyclerView.getAdapter() == null) {
+                    mLRecyclerView.setAdapter(adapter);
+                }
             }
         }
 
