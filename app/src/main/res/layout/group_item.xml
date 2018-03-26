@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:padding="@dimen/dp10">
+
+    <TextView
+        android:id="@+id/month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp10"
+        android:text="3月"
+        android:textColor="@color/grey_1000"
+        android:textSize="@dimen/sp18"
+        />
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/month"
+        android:layout_marginBottom="@dimen/dp10"
+        android:layout_marginTop="5dp"
+        android:text="2018年"
+        android:textColor="@color/grey_500"
+        android:textSize="@dimen/sp10"/>
+
+
+    <TextView
+        android:id="@+id/totalInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/month"
+        android:layout_marginLeft="@dimen/dp20"
+        android:layout_toRightOf="@id/month"
+        android:text="流入:  1200.00"
+        android:textColor="@color/grey_500"
+        android:textSize="@dimen/sp13"/>
+
+    <TextView
+        android:id="@+id/totalOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/year"
+        android:layout_alignLeft="@id/totalInput"
+        android:text="流出:  0.00"
+        android:textColor="@color/grey_500"
+        android:textSize="@dimen/sp13"/>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:src="@mipmap/to_bottom"/>
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp10"
+        android:layout_marginTop="@dimen/dp10"
+        android:layout_toLeftOf="@id/image"
+        android:text="+1200.00"
+        android:textColor="@color/grey_1100"
+        android:textSize="@dimen/sp18"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/total"
+        android:layout_toLeftOf="@id/image"
+        android:text="月结余"
+        android:layout_alignRight="@id/total"
+        android:textColor="@color/grey_500"
+        android:layout_marginTop="6dp"
+        android:textSize="@dimen/sp10"/>
+
+</RelativeLayout>

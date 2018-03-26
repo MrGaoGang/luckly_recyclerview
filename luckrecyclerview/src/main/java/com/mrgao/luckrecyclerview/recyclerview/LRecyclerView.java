@@ -14,15 +14,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mrgao.luckrecyclerview.LucklyRecyclerView;
 import com.mrgao.luckrecyclerview.R;
 import com.mrgao.luckrecyclerview.decoration.LRecyclerViewItemDivider;
+import com.mrgao.luckrecyclerview.header.HeaderView;
 import com.mrgao.luckrecyclerview.interfaces.LuckRecyclerViewInterface;
+import com.mrgao.luckrecyclerview.utils.ScreenUtils;
 import com.mrgao.luckrecyclerview.views.TwoFishView;
 
 import java.util.ArrayList;
@@ -57,6 +62,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private boolean mIsSlowUp = false;
     //加载更多监听
     private LucklyRecyclerView.OnLoadMoreListener mLoadMoreListener;
+    //下拉加载更多监听
+    private LucklyRecyclerView.OnRefreshListener mOnRefreshListener;
     //添加headerView和footerView的包装适配器
     private LoadMoreWrapAdapter mWrapAdapter;
     //适配器的数据监听
@@ -73,35 +80,41 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private String mMoreLoadingComplete = "上拉加载更多";
     //没有更多数据可以加载
     private String mMoreLoadingEnd = "无更多数据";
+    //顶部的下拉刷新
+    private HeaderView mHeaderView;
+    //下拉刷新的最近触摸点的Y轴的值
+    private float mLatesY = -1;
+    //表示是否可以下拉刷新
+    private boolean mCanRefresh = true;
+    //空视图和错误视图显示的点击事件
+    private boolean mOnClickErrorToRefresh = false;
 
     /**
-     *
      * @param context
      */
     public LRecyclerView(Context context) {
-        super(context);
+        this(context, null);
 
     }
 
     /**
-     *
      * @param context
      * @param attrs
      */
     public LRecyclerView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+
 
     }
 
     /**
-     *
      * @param context
      * @param attrs
      * @param defStyle
      */
     public LRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        mHeaderView = new HeaderView(getContext());
 
     }
 
@@ -125,10 +138,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                         lastItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                         itemCount = linearLayoutManager.getItemCount();
 
+
                     } else if (manager instanceof GridLayoutManager) {
                         GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
                         //GridLayoutManager判断上拉加载还没有做
-                        lastItemPosition = gridLayoutManager.findLastVisibleItemPosition();
+                        lastItemPosition = gridLayoutManager.findLastCompletelyVisibleItemPosition();
                         itemCount = gridLayoutManager.getItemCount();
 
                     } else if (manager instanceof StaggeredGridLayoutManager) {
@@ -158,10 +172,85 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             }
         });
+
+
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        if (mLatesY == -1) {
+            mLatesY = e.getRawY();
+        }
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLatesY = e.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float distanceY = e.getRawY() - mLatesY;
+                mLatesY = e.getRawY();
+                if (isItemOnTop() && mCanRefresh) {
+                    mHeaderView.onAcionMove(distanceY);
+                    //下拉状态的时候，就不调用下面的方法
+                    if (mHeaderView.getVisibleHeight() > 0 && mHeaderView.getState() < HeaderView.STATE_REFRESHING) {
+                        return false;
+                    }
+                }
+                break;
+
+            default:
+                mLatesY = -1;
+                if (mHeaderView.releaseAction() && mCanRefresh && isItemOnTop()) {
+                    if (mOnRefreshListener != null) {
+                        mOnRefreshListener.onRefresh();
+                    }
+                }
+
+                break;
+        }
+        return super.onTouchEvent(e);
+    }
+
+
+    /**
+     * 判断是否已经到达了顶部
+     *
+     * @return
+     */
+    private boolean isItemOnTop() {
+        boolean isTop = false;
+        int position;
+        LayoutManager manager = getLayoutManager();
+        if (manager instanceof LinearLayoutManager) {
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) manager;
+            position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            if (position == 0 || position == 1) {
+                isTop = true;
+            } else {
+                isTop = false;
+            }
+        } else if (manager instanceof GridLayoutManager) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
+            position = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+            if (position == 0 || position == 1) {
+                isTop = true;
+            } else {
+                isTop = false;
+            }
+        } else {
+            //是否还可以往下滑动，如果不可以表示已经到达了顶部
+            if (!canScrollVertically(-1)) {
+                isTop = true;
+            } else {
+                isTop = false;
+            }
+        }
+
+
+        return isTop;
     }
 
     /**
-     *
      * @param lastPositions
      * @return
      */
@@ -200,7 +289,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -266,7 +354,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -308,6 +395,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public void reset() {
         showError(false);
         setLoadingComplete();
+        setRefreshComplete();
         mDataObserver.onChanged();
     }
 
@@ -320,6 +408,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public void setEmptyView(View view) {
         if (view != null) {
             mEmptyView = view;
+            mEmptyView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickToRefresh();
+                }
+            });
             addViewToRoot(mEmptyView);
 
         }
@@ -333,8 +427,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      */
     @Override
     public void setEmptyView(int id) {
-        mEmptyView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
-        addViewToRoot(mEmptyView);
+        mEmptyView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getParent(), false);
+        setEmptyView(mEmptyView);
 
     }
 
@@ -347,17 +441,27 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public void setErrorView(View view) {
         if (view != null) {
             mErrorView = view;
+            mErrorView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickToRefresh();
+                }
+            });
             addViewToRoot(mErrorView);
         }
     }
 
     private void addViewToRoot(View view) {
         //一定要记得加这句话，这样才会在RecyclerView中添加此布局
-        ViewGroup rootView = (ViewGroup) this.getRootView();
+
+        ViewGroup rootView = (ViewGroup) this.getParent();
         int childCount = rootView.getChildCount();
+
         if (view.getTag() == null) {//避免重复添加EmptyView
             view.setTag(childCount + 1);
-            ((ViewGroup) this.getRootView()).addView(view);
+            FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity= Gravity.CENTER;
+            rootView.addView(view,layoutParams);
             mDataObserver.onChanged();
         }
     }
@@ -369,13 +473,14 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      */
     @Override
     public void setErrorView(int id) {
-        mErrorView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getRootView(), false);
-        addViewToRoot(mErrorView);
+        mErrorView = LayoutInflater.from(getContext()).inflate(id, (ViewGroup) getParent(), false);
+        setErrorView(mErrorView);
     }
 
 
     /**
      * 显示错误
+     *
      * @param errorShow
      */
     @Override
@@ -429,6 +534,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置加载更多处于加载状态
+     *
      * @param loading
      */
     @Override
@@ -476,6 +582,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置无更多数据
+     *
      * @param loading
      */
     @Override
@@ -542,6 +649,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 设置线性布局的分割线
+     *
      * @param oritation
      * @param color
      * @param lineWidth
@@ -559,7 +667,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param color
      */
     @Override
@@ -570,7 +677,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     /**
-     *
      * @param progressColor
      */
     @Override
@@ -581,8 +687,15 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
 
+    @Override
+    public void setFooterVisiable(boolean visiable) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setFooterVisiable(visiable);
+        }
+    }
+
+
     /**
-     *
      * @param onItemClickListener
      */
     @Override
@@ -592,6 +705,49 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
+    @Override
+    public void setOnRefreshListener(LucklyRecyclerView.OnRefreshListener onRefreshListener) {
+        if (onRefreshListener != null) {
+            mOnRefreshListener = onRefreshListener;
+        }
+    }
+
+    @Override
+    public void refresh() {
+        if (mCanRefresh && mOnRefreshListener != null) {
+            mHeaderView.setState(HeaderView.STATE_REFRESHING);
+            mOnRefreshListener.onRefresh();
+        }
+    }
+
+    @Override
+    public void setRefreshEnable(boolean enable) {
+        mCanRefresh = enable;
+        mHeaderView.setVisibleHeight(0);
+
+
+    }
+
+    @Override
+    public void setRefreshComplete() {
+        mHeaderView.refreshComplete();
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        mHeaderView.setDuration(duration);
+    }
+
+    @Override
+    public void setRefreshColor(int color) {
+        mHeaderView.setRefreshColor(color);
+    }
+
+    @Override
+    public void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh) {
+        mOnClickErrorToRefresh = emptyToRefresh;
+    }
+
     /**
      * 检查是否应该为空
      */
@@ -599,9 +755,9 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     private void checkIfEmpty() {
         if (mEmptyView != null && mWrapAdapter != null) {
             final boolean emptyViewVisible =
-                    mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 1;
-            mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : GONE);
-            setVisibility(emptyViewVisible ? GONE : VISIBLE);
+                    mWrapAdapter.getItemCount() == mWrapAdapter.getHeaderCount() + 2;
+            mEmptyView.setVisibility(emptyViewVisible ? View.VISIBLE : INVISIBLE);
+            setVisibility(emptyViewVisible ? INVISIBLE : VISIBLE);
         }
     }
 
@@ -610,24 +766,75 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
      * 监听适配器的数据变化的
      */
     private class DataObserver extends RecyclerView.AdapterDataObserver {
+        @SuppressLint("WrongConstant")
         @Override
         public void onChanged() {
             if (mWrapAdapter != null) {
+
                 mWrapAdapter.notifyDataSetChanged();
             }
             checkIfEmpty();
             if (mErrorView != null) {
                 if (mErrorShow) {
                     if (mEmptyView != null) {
-                        mEmptyView.setVisibility(GONE);
+                        mEmptyView.setVisibility(INVISIBLE);
                     }
                     LRecyclerView.this.setVisibility(INVISIBLE);
                     mErrorView.setVisibility(VISIBLE);
 
                 } else {
-                    mErrorView.setVisibility(GONE);
+                    mErrorView.setVisibility(INVISIBLE);
                     checkIfEmpty();
                 }
+            }
+
+
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeInserted(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            mWrapAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    private void onClickToRefresh() {
+        if (mOnClickErrorToRefresh && mErrorView != null && mErrorView.getVisibility() == VISIBLE && mErrorShow == true) {
+            if (mOnRefreshListener != null) {
+                mErrorShow = false;
+                mDataObserver.onChanged();
+                refresh();
+            }
+
+        }
+        if (mOnClickErrorToRefresh && mEmptyView != null && mEmptyView.getVisibility() == VISIBLE) {
+            if (mOnRefreshListener != null) {
+                mEmptyView.setVisibility(INVISIBLE);
+                LRecyclerView.this.setVisibility(VISIBLE);
+                if (mErrorView != null) {
+                    mErrorView.setVisibility(INVISIBLE);
+                }
+                refresh();
             }
 
         }
@@ -645,6 +852,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     public class LoadMoreWrapAdapter extends Adapter<ViewHolder> {
 
         private RecyclerView.Adapter mAdapter;
+        //下拉刷新
+        private final int HEADER_REFRESH_TYPE = -2;
         //底部的Item
         public final int FOOTER_TYPE = -1;
         //HeaderView的其实下标，这个的目的是，防止用户在自定义的时候Type和这个headerType相同
@@ -660,6 +869,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         private int mProgressColor = Color.RED;
 
+        private boolean isFooterVisiable = true;
         private LucklyRecyclerView.OnItemClickListener mOnItemClickListener;
 
         public LoadMoreWrapAdapter(Adapter adapter) {
@@ -669,7 +879,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType == FOOTER_TYPE) {
+            if (viewType == HEADER_REFRESH_TYPE) {
+                return new HeaderViewHolder(mHeaderView);
+
+            } else if (viewType == FOOTER_TYPE) {
                 mFooterView = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_view, parent, false);
                 return new FooterHolder(mFooterView);
             } else if (isHeaderType(viewType)) {
@@ -682,74 +895,92 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         @SuppressLint("WrongConstant")
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             if (holder instanceof FooterHolder) {
                 FooterHolder footerHolder = (FooterHolder) holder;
-                footerHolder.mProgressBar.setProgressColor(mProgressColor);
-                footerHolder.mTextView.setTextColor(mLoadingTextColor);
-                if (mFooterState == LOADING_COMPLETE) {
-                    footerHolder.mProgressBar.setVisibility(GONE);
-                    footerHolder.mTextView.setText(mMoreLoadingComplete);
-                } else if (mFooterState == LOADING) {
-                    footerHolder.mProgressBar.setVisibility(VISIBLE);
-                    footerHolder.mTextView.setText(mMoreLoading);
+                if (isFooterVisiable) {
+                    if (!isLittleDataHideFooter(position, holder.itemView)) {
+                        footerHolder.itemView.setVisibility(VISIBLE);
+                        footerHolder.mProgressBar.setProgressColor(mProgressColor);
+                        footerHolder.mTextView.setTextColor(mLoadingTextColor);
+                        if (mFooterState == LOADING_COMPLETE) {
+                            footerHolder.mProgressBar.setVisibility(GONE);
+                            footerHolder.mTextView.setText(mMoreLoadingComplete);
+                        } else if (mFooterState == LOADING) {
+                            footerHolder.mProgressBar.setVisibility(VISIBLE);
+                            footerHolder.mTextView.setText(mMoreLoading);
 
-                } else if (mFooterState == LOADING_END) {
-                    footerHolder.mProgressBar.setVisibility(GONE);
-                    footerHolder.mTextView.setText(mMoreLoadingEnd);
+                        } else if (mFooterState == LOADING_END) {
+                            footerHolder.mProgressBar.setVisibility(GONE);
+                            footerHolder.mTextView.setText(mMoreLoadingEnd);
+                        }
+                    }
+
+                } else {
+                    footerHolder.itemView.setVisibility(INVISIBLE);
                 }
 
-            } else if (holder instanceof HeaderViewHolder) {
 
+            } else if (holder instanceof HeaderViewHolder) {
 
             } else {
                 //注意，此处必须要讲position减去头部的个数
                 if (mAdapter != null) {
-                    if (position - mHeaderViews.size() < mAdapter.getItemCount()) {
-                        mAdapter.onBindViewHolder(holder, position - mHeaderViews.size());
+                    if (position - mHeaderViews.size() - 1 < mAdapter.getItemCount()) {
+                        mAdapter.onBindViewHolder(holder, position - mHeaderViews.size() - 1);
                     }
                 }
 
             }
+
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(position);
+                        //减掉1是为了减掉顶部下拉刷新，设置为不可显示
+                        mOnItemClickListener.onItemClick(holder.itemView, position - 1);
+
                     }
                 }
             });
+
             holder.itemView.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemLongClick(position);
+                        mOnItemClickListener.onItemLongClick(holder.itemView, position - 1);
                     }
-                    return true;
+                    return false;
                 }
             });
 
         }
 
+        /**
+         * +2的原因是：一个为顶部下拉刷新，一个为底部上拉加载
+         *
+         * @return
+         */
         @Override
         public int getItemCount() {
             if (mAdapter != null) {
                 if (mAdapter.getItemCount() > 0) {
-                    return mAdapter.getItemCount() + 1 + mHeaderViews.size();
+                    return mAdapter.getItemCount() + 2 + mHeaderViews.size();
                 } else {
-                    return mHeaderViews.size() + 1;
+                    return mHeaderViews.size() + 2;
                 }
             } else {
-                return mHeaderViews.size() + 1;
+                return mHeaderViews.size() + 2;
             }
 
 
         }
 
+
         @Override
         public long getItemId(int position) {
-            if (mAdapter != null && position >= getHeaderCount()) {
-                int adjPosition = position - getHeaderCount();
+            if (mAdapter != null && position >= getHeaderCount() + 1) {
+                int adjPosition = position - getHeaderCount() - 1;
                 if (adjPosition < mAdapter.getItemCount()) {
                     return mAdapter.getItemId(adjPosition);
                 }
@@ -759,8 +990,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         @Override
         public int getItemViewType(int position) {
-            if (position < mHeaderViews.size()) {
-                return getHeaderTypeByPosition(position);
+            if (position == 0) {//最开始的为下拉刷新的布局
+                return HEADER_REFRESH_TYPE;
+            }
+            if (position >= 1 && position < mHeaderViews.size() + 1) {
+                return getHeaderTypeByPosition(position - 1);
             }
             if (position == getItemCount() - 1) {
                 return FOOTER_TYPE;
@@ -768,8 +1002,9 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             int adapterCount;
             if (mAdapter != null) {
                 adapterCount = mAdapter.getItemCount();
-                if (position - mHeaderViews.size() < adapterCount) {
-                    int type = mAdapter.getItemViewType(position);
+                int realPosition = position - getHeaderCount() - 1;
+                if (realPosition < adapterCount) {
+                    int type = mAdapter.getItemViewType(realPosition);
                     if (type >= HEADER_TYPE_SIZE) {
                         throw new IndexOutOfBoundsException("LucklyRecyclerView require itemType below 20000 ");
                     }
@@ -780,6 +1015,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         }
 
+        @Override
+        public void registerAdapterDataObserver(AdapterDataObserver observer) {
+            mAdapter.registerAdapterDataObserver(observer);
+        }
 
         @Override
         public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
@@ -787,9 +1026,25 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
 
         @Override
+        public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+            mAdapter.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public void onViewRecycled(RecyclerView.ViewHolder holder) {
+            mAdapter.onViewRecycled(holder);
+        }
+
+        @Override
+        public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+            return mAdapter.onFailedToRecycleView(holder);
+        }
+
+        @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             LayoutManager layoutManager = recyclerView.getLayoutManager();
+
             if (layoutManager instanceof GridLayoutManager) {
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
                 final int spanCount = gridLayoutManager.getSpanCount();
@@ -799,7 +1054,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                         // 如果当前是footer的位置，那么该item占据一行的个单元格，正常情况下占据1个单元格
                         if (getItemViewType(position) == FOOTER_TYPE) {
                             return spanCount;
-                        } else if (getItemViewType(position) == getHeaderTypeByPosition(position)) {
+                        } else if (isRefreshHeader(position) || getItemViewType(position) == getHeaderTypeByPosition(position - 1)) {
                             return spanCount;
                         } else {
                             return 1;
@@ -811,8 +1066,41 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
 
 
+        private boolean isRefreshHeader(int position) {
+            if (getItemViewType(position) == HEADER_REFRESH_TYPE) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * 当数据比较少的时候，没有到达屏幕的最下方，那么久不显示footer
+         *
+         * @param position
+         * @param lastVisiableView
+         */
+        @SuppressLint("WrongConstant")
+        private boolean isLittleDataHideFooter(int position, View lastVisiableView) {
+            if (position == getItemCount() - 1) {
+
+                if (lastVisiableView != null) {
+                    if (computeVerticalScrollRange() < ScreenUtils.getScreenHeight(getContext())) {
+                        lastVisiableView.setVisibility(INVISIBLE);
+                        return true;
+                    } else {
+                        lastVisiableView.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                }
+            }
+
+            return false;
+
+        }
+
         /**
          * 根据header的ViewType判断是哪个header
+         *
          * @param itemType
          * @return
          */
@@ -825,6 +1113,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 判断一个type是否为HeaderType
+         *
          * @param itemViewType
          * @return
          */
@@ -848,6 +1137,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 设置加载更多的字体的颜色
+         *
          * @param color
          */
         public void setLoadingTextColor(int color) {
@@ -857,10 +1147,16 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 设置进度条的颜色
+         *
          * @param color
          */
         public void setProgressColor(int color) {
             this.mProgressColor = color;
+            notifyItemRangeChanged(getItemCount() - 1, 1);
+        }
+
+        public void setFooterVisiable(boolean visiable) {
+            isFooterVisiable = visiable;
             notifyItemRangeChanged(getItemCount() - 1, 1);
         }
 
@@ -907,10 +1203,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
         /**
          * 点击事件
+         *
          * @param onItemClickListener
          */
-        public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener){
-            this.mOnItemClickListener=onItemClickListener;
+        public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener) {
+            this.mOnItemClickListener = onItemClickListener;
         }
 
         public class FooterHolder extends ViewHolder {

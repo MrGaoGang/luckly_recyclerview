@@ -78,5 +78,22 @@ public interface LuckRecyclerViewInterface {
 
     void setLoadingProgressColor(int progressColor);
 
+    void setFooterVisiable(boolean visiable);
+
     void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener);
+
+    void setOnRefreshListener(LucklyRecyclerView.OnRefreshListener onRefreshListener);
+
+    void refresh();
+
+    void setRefreshEnable(boolean enable);
+
+    void setRefreshComplete();
+
+    void setDuration(int duration);
+
+    void setRefreshColor(int color);
+
+    void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh);
+
 }
