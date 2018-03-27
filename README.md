@@ -20,7 +20,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.0.2'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.0.4'
 }
 ```
 <br>
@@ -148,6 +148,7 @@
 ```
 
 
+
 ```Java
    @Override
     public void onRefresh() {
@@ -167,6 +168,12 @@
             }
         }, 5000);
     }
+```
+
+### 10、设置是否空白视图和错误视图点击刷新<br>
+
+```Java
+ mLRecyclerView.setOnClickEmptyOrErrorToRefresh(true);
 ```
 
 
