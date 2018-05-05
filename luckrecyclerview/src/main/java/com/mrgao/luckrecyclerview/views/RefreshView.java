@@ -108,13 +108,14 @@ public class RefreshView extends View {
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         mPaint.setColor(mPointColor);
         mPaint.setStrokeWidth(mStrokeWidth);
         drawCircle(canvas);
-
     }
+
+
 
     private void drawCircle(Canvas canvas) {
 
