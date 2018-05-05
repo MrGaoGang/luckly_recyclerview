@@ -84,7 +84,7 @@ public interface LuckRecyclerViewInterface {
 
     void setOnRefreshListener(LucklyRecyclerView.OnRefreshListener onRefreshListener);
 
-    void refresh();
+
 
     void setRefreshEnable(boolean enable);
 

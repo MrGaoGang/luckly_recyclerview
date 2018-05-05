@@ -195,7 +195,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             case MotionEvent.ACTION_MOVE:
                 float distanceY = e.getRawY() - mLatesY;
                 mLatesY = e.getRawY();
-                if (isItemOnTop() && mCanRefresh) {
+                if (isOnTop() && mCanRefresh) {
                     mHeaderView.onAcionMove(distanceY);
                     //下拉状态的时候，就不调用下面的方法
                     if (mHeaderView.getVisibleHeight() > 0 && mHeaderView.getState() < HeaderView.STATE_REFRESHING) {
@@ -206,7 +206,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             default:
                 mLatesY = -1;
-                if (mHeaderView.releaseAction() && mCanRefresh && isItemOnTop()) {
+                if (mHeaderView.releaseAction() && mCanRefresh && isOnTop()) {
                     if (mOnRefreshListener != null) {
                         mOnRefreshListener.onRefresh();
                     }
@@ -217,44 +217,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         return super.onTouchEvent(e);
     }
 
-
-    /**
-     * 判断是否已经到达了顶部
-     *
-     * @return
-     */
-    private boolean isItemOnTop() {
-        boolean isTop = false;
-        int position;
-        LayoutManager manager = getLayoutManager();
-        if (manager instanceof LinearLayoutManager) {
-            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) manager;
-            position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-            if (position == 0 || position == 1) {
-                isTop = true;
-            } else {
-                isTop = false;
-            }
-        } else if (manager instanceof GridLayoutManager) {
-            GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
-            position = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
-            if (position == 0 || position == 1) {
-                isTop = true;
-            } else {
-                isTop = false;
-            }
-        } else {
-            //是否还可以往下滑动，如果不可以表示已经到达了顶部
-            if (!canScrollVertically(-1)) {
-                isTop = true;
-            } else {
-                isTop = false;
-            }
-        }
-
-
-        return isTop;
+    private boolean isOnTop() {
+        return mHeaderView.getParent() != null;
     }
+
 
     /**
      * @param lastPositions
@@ -723,18 +689,14 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         }
     }
 
-    @Override
-    public void refresh() {
-        if (mCanRefresh && mOnRefreshListener != null) {
-            mHeaderView.setState(HeaderView.STATE_REFRESHING);
-            mOnRefreshListener.onRefresh();
-        }
-    }
 
     @Override
     public void setRefreshEnable(boolean enable) {
         mCanRefresh = enable;
-        mHeaderView.setVisibleHeight(0);
+        if (!enable) {
+            mHeaderView.setVisibleHeight(0);
+        }
+
 
     }
 
@@ -850,6 +812,13 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
 
+    private void refresh() {
+        if (mCanRefresh && mOnRefreshListener != null) {
+            mHeaderView.setState(HeaderView.STATE_REFRESHING);
+            mOnRefreshListener.onRefresh();
+        }
+    }
+
     /**
      * Created by mr.gao on 2018/1/14.
      * Package:    mrgao.com.recyclerviewtext.loadMore.adapter
@@ -938,26 +907,27 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             }
 
-            holder.itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mOnItemClickListener != null) {
+            if (mOnItemClickListener != null) {
+                holder.itemView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         //减掉1是为了减掉顶部下拉刷新，设置为不可显示
                         mOnItemClickListener.onItemClick(holder.itemView, position - 1);
 
                     }
-                }
-            });
+                });
+            }
 
-            holder.itemView.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (mOnItemClickListener != null) {
+            if (mOnItemClickListener != null) {
+                holder.itemView.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
                         mOnItemClickListener.onItemLongClick(holder.itemView, position - 1);
+                        return true;
                     }
-                    return false;
-                }
-            });
+                });
+
+            }
 
         }
 

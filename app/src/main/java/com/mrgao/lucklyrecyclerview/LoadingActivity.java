@@ -154,7 +154,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
     @Override
     public void onRefresh() {
-       mLRecyclerView.setRefreshEnable(true);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

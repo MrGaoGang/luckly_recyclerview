@@ -1,6 +1,7 @@
 package com.mrgao.luckrecyclerview.views;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -116,7 +117,6 @@ public class RefreshView extends View {
     }
 
 
-
     private void drawCircle(Canvas canvas) {
 
         if (mProgress != 100) {
@@ -182,7 +182,7 @@ public class RefreshView extends View {
     public void start() {
 
         if (mValueAnimator != null) {
-            mValueAnimator.cancel();
+            restart();
         }
 
         mValueAnimator = ValueAnimator.ofInt(0, 100);
@@ -195,13 +195,13 @@ public class RefreshView extends View {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mProgress = (int) valueAnimator.getAnimatedValue();
                 postInvalidate();
+
             }
         });
 
 
         mValueAnimator.start();
     }
-
 
 
     public void setStrokeWidth(int strokeWidth) {
@@ -232,9 +232,14 @@ public class RefreshView extends View {
         mOnProgressEndListener = onProgressEndListener;
     }
 
+    @SuppressLint("WrongConstant")
     public void setDuration(int duration) {
         mDuration = duration;
-        postInvalidate();
+        if (getVisibility() == View.VISIBLE) {
+            postInvalidate();
+        }
+
+
     }
 
     public void setPointColor(int pointColor) {

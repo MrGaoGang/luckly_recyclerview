@@ -4,9 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LucklyRecyclerView.iml" filepath="$PROJECT_DIR$/LucklyRecyclerView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/luckly_recyclerview.iml" filepath="$PROJECT_DIR$/luckly_recyclerview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/luckrecyclerview/luckrecyclerview.iml" filepath="$PROJECT_DIR$/luckrecyclerview/luckrecyclerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/luckrecyclerview/luckrecyclerview.iml" filepath="$PROJECT_DIR$/luckrecyclerview/luckrecyclerview.iml" />
     </modules>
   </component>
