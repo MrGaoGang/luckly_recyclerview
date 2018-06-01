@@ -1,5 +1,6 @@
 package com.mrgao.luckrecyclerview.interfaces;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -96,4 +97,16 @@ public interface LuckRecyclerViewInterface {
 
     void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh);
 
+
+    void setRefreshBackground(Drawable drawable);
+
+    void setRefreshBackgroundColor(int color);
+
+    void setFooterBackground(Drawable drawable);
+
+    void setFooterBackgroundColor(int color);
+
+    void setRefreshBackgroundResource(int resource);
+
+    void setFooterBackgroundResource(int resource);
 }

@@ -2,6 +2,7 @@ package com.mrgao.luckrecyclerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -70,8 +71,6 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     }
 
 
-
-
     @Override
     public void setRefreshEnable(boolean enable) {
         mLRecyclerView.setRefreshEnable(true);
@@ -96,6 +95,37 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
     @Override
     public void setOnClickEmptyOrErrorToRefresh(boolean emptyToRefresh) {
         mLRecyclerView.setOnClickEmptyOrErrorToRefresh(emptyToRefresh);
+    }
+
+    @Override
+    public void setRefreshBackground(Drawable drawable) {
+        mLRecyclerView.setRefreshBackground(drawable);
+    }
+
+    @Override
+    public void setRefreshBackgroundColor(int color) {
+        mLRecyclerView.setRefreshBackgroundColor(color);
+    }
+
+    @Override
+    public void setFooterBackground(Drawable drawable) {
+        mLRecyclerView.setFooterBackground(drawable);
+    }
+
+    @Override
+    public void setFooterBackgroundColor(int color) {
+        mLRecyclerView.setFooterBackgroundColor(color);
+    }
+
+    @Override
+    public void setRefreshBackgroundResource(int resource) {
+        mLRecyclerView.setRefreshBackgroundResource(resource);
+    }
+
+    @Override
+    public void setFooterBackgroundResource(int resource) {
+        mLRecyclerView.setFooterBackgroundResource(resource);
+
     }
 
     /*下面是关于RecyckerView的*/

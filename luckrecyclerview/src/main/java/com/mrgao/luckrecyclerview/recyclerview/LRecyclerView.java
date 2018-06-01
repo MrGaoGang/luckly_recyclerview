@@ -95,6 +95,10 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     //头部的view
     private List<View> mHeaderViews;
 
+    private int mFooterBackcolor = -1;
+    private int mFooterBackResource = -1;
+    private Drawable mFooterBackDrawable = null;
+
     /**
      * @param context
      */
@@ -720,6 +724,42 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         mOnClickErrorToRefresh = emptyToRefresh;
     }
 
+    @Override
+    public void setRefreshBackground(Drawable drawable) {
+        if (mHeaderView != null) {
+            mHeaderView.getContainer().setBackground(drawable);
+        }
+    }
+
+    @Override
+    public void setRefreshBackgroundColor(int color) {
+        if (mHeaderView != null) {
+            mHeaderView.getContainer().setBackgroundColor(color);
+        }
+    }
+
+    @Override
+    public void setFooterBackground(Drawable drawable) {
+        mFooterBackDrawable = drawable;
+    }
+
+    @Override
+    public void setFooterBackgroundColor(int color) {
+        mFooterBackcolor = color;
+    }
+
+    @Override
+    public void setRefreshBackgroundResource(int resource) {
+        if (mHeaderView != null) {
+            mHeaderView.getContainer().setBackgroundResource(resource);
+        }
+    }
+
+    @Override
+    public void setFooterBackgroundResource(int resource) {
+        mFooterBackResource = resource;
+    }
+
     /**
      * 检查是否应该为空
      */
@@ -928,6 +968,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 });
 
             }
+
+            /**
+             * 设置底部footer的背景
+             */
+            setFooterBackground();
 
         }
 
@@ -1157,6 +1202,24 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
          */
         public Adapter getOriginalAdapter() {
             return mAdapter;
+        }
+
+        /**
+         * 设置footer的背景
+         */
+        private void setFooterBackground() {
+
+            if (mFooterBackResource != -1 && mFooterView != null) {
+                mFooterView.setBackgroundResource(mFooterBackResource);
+            }
+
+            if (mFooterBackDrawable != null && mFooterView != null) {
+                mFooterView.setBackground(mFooterBackDrawable);
+            }
+
+            if (mFooterBackcolor != -1 && mFooterView != null) {
+                mFooterView.setBackgroundColor(mFooterBackcolor);
+            }
         }
 
         /**

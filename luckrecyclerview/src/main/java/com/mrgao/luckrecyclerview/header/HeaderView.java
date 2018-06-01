@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -75,6 +76,9 @@ public class HeaderView extends LinearLayout implements BaseHeaderView, RefreshV
         mOriginalHeight = getMeasuredHeight();
     }
 
+    public View getContainer() {
+        return mContainer;
+    }
 
     @Override
     public void onAcionMove(float delta) {

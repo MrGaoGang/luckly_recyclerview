@@ -49,9 +49,11 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //封装好了的线性分割线,也可以使用setGridDivider()；使用以及封装好的网格式布局，在使用这句话之前，请先设置好LayoutManager
         mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
-       // mLRecyclerView.addGridDivider();
+        // mLRecyclerView.addGridDivider();
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        //SHE
+        mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
+        mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
         mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
         dataAdapter = new DataAdapter();
@@ -94,7 +96,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
             @Override
             public void onItemLongClick(View view, int position) {
                 TextView textView = (TextView) view.findViewById(R.id.item);
-                textView.setText("长按"+position);
+                textView.setText("长按" + position);
                 Log.i(TAG, "长按--->" + position);
             }
         });
