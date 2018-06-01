@@ -1,7 +1,7 @@
 ﻿# LucklyRecyclerView
-使用RecyclerView封装headerview,footerView,并实现上拉加载更多，下拉刷新，分组功能
+使用RecyclerView封装headerview,footerView,并实现上拉加载更多，下拉刷新，分组功能(添加上拉加载和下拉刷新设置背景)
 ====
-
+**界面可能有点丑，😁，但是是为了展示所有效果，请大家见谅。（所有东西都是可自己设置的哦）😊** <br>
 效果图：
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/main.gif) 
 ![](https://github.com/MrGaoGang/LucklyRecyclerView/blob/master/images/group.gif) 
