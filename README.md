@@ -20,7 +20,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.1.0'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.1.1'
 }
 ```
 <br>
@@ -176,6 +176,24 @@
  mLRecyclerView.setOnClickEmptyOrErrorToRefresh(true);
 ```
 
+### 11、可设置下拉刷新和上拉加载的背景图片(可用于广告的放置哦)
+
+**注意：
+1、如果在初始化的时候 直接设置了背景图片可不用刷新adapter。</br>
+2、如果通过网络获取到背景图片之后可以使用如下方法设置背景，但是需要添加一步：notifyItemChanged()
+**
+```Java
+    //设置下拉刷新的背景图片（可放广告图片哦）
+    mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
+    //设置上拉加载部分设置背景图片（也可放广告哦）
+    mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
+  	
+    //如果通过网络获取的footer图片，则需要调用以下：（如果是设置刷新部分的背景直接调用setRefreshBackground）
+     mLRecyclerView.getOriginalRecyclerView().getAdapter()
+		.notifyItemChanged(mLRecyclerView.getOriginalRecyclerView().getAdapter().getItemCount() - 1);
+
+
+```
 
 ## 二、如何实现分组
 
