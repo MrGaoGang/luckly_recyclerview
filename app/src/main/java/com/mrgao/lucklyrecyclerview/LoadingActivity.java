@@ -54,7 +54,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //设置下拉刷新的背景图片（可放广告图片哦）
         mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
         //设置上拉加载部分设置背景图片（也可放广告哦）
-        mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
+       // mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
 
         mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
@@ -104,6 +104,16 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         });
 
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                //模拟网络获取图片
+                mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
+                //需要刷新指定位置
+                mLRecyclerView.getOriginalRecyclerView().getAdapter().notifyItemChanged(mLRecyclerView.getOriginalRecyclerView().getAdapter().getItemCount() - 1);
+            }
+        }).start();
     }
 
 
