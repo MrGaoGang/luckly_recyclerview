@@ -51,9 +51,11 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.addLinearDivider(LRecyclerView.VERTICAL_LIST);
         // mLRecyclerView.addGridDivider();
         mLRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        //SHE
+        //设置下拉刷新的背景图片（可放广告图片哦）
         mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
+        //设置上拉加载部分设置背景图片（也可放广告哦）
         mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
+
         mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
         dataAdapter = new DataAdapter();
