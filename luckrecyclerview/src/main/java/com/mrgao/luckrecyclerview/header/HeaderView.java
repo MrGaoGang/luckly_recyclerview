@@ -162,9 +162,8 @@ public class HeaderView extends LinearLayout implements BaseHeaderView, RefreshV
      */
     @SuppressLint("WrongConstant")
     public void reset() {
-        mRefreshView.setVisibility(INVISIBLE);
-        mImageView.setVisibility(VISIBLE);
         smoothScrollTo(0);
+        setState(STATE_NORMAL);
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 setState(STATE_NORMAL);
@@ -224,7 +223,7 @@ public class HeaderView extends LinearLayout implements BaseHeaderView, RefreshV
         mTextView.setText(R.string.refreshing);
     }
 
-    public void setRefreshColor(int color){
+    public void setRefreshColor(int color) {
         mRefreshView.setPointColor(color);
         mTextView.setTextColor(color);
     }

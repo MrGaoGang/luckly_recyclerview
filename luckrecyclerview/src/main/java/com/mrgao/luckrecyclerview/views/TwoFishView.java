@@ -129,14 +129,9 @@ public class TwoFishView extends View {
         }
     }
 
-    /**
-     * 绘制原点
-     *
-     * @param canvas
-     */
     @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         mPaint.setColor(mPointColor);
         for (int i = 0; i < numberOfCircle; i++) {
             canvas.save();
@@ -146,6 +141,7 @@ public class TwoFishView extends View {
             canvas.restore();
         }
     }
+
 
     public void setProgressColor(int progressColor) {
         mPointColor = progressColor;

@@ -75,7 +75,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //添加空View
         mLRecyclerView.setEmptyView(R.layout.view_empty);
 
-        //添加headerView,要在设置了Adapter之后才可使用哦
+
         View head = LayoutInflater.from(this).inflate(R.layout.header_view, mLRecyclerView, false);
         mLRecyclerView.addHeaderView(head);
 
@@ -154,7 +154,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
     @Override
     public void onRefresh() {
-       mLRecyclerView.setRefreshEnable(true);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
