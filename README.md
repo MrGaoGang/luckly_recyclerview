@@ -178,10 +178,10 @@
 
 ### 11、可设置下拉刷新和上拉加载的背景图片(可用于广告的放置哦)
 
-**注意：
-1、如果在初始化的时候 直接设置了背景图片可不用刷新adapter。</br>
-2、如果通过网络获取到背景图片之后可以使用如下方法设置背景，但是需要添加一步：notifyItemChanged()
-**
+**注意:**
+ 1. 如果在初始化的时候 直接设置了背景图片可不用刷新adapter。</br>
+ 2. 如果通过网络获取到背景图片之后可以使用如下方法设置背景，但是需要添加一步：notifyItemChanged()
+
 ```Java
     //设置下拉刷新的背景图片（可放广告图片哦）
     mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
