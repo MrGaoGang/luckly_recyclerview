@@ -278,3 +278,6 @@ mGroupAdapter.isParentView(position);
 
 ## 三、具体如何使用请看例子
 [LucklyRecyclerView](https://github.com/MrGaoGang/LucklyRecyclerView/tree/master/app/src/main/java/com/mrgao/lucklyrecyclerview)
+
+欢迎关注我的微信公众号：
+![](https://img-blog.csdn.net/2018100922484657?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMyNDAwODIx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
