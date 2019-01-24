@@ -20,7 +20,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.1.1'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.2.0'
 }
 ```
 <br>
@@ -194,6 +194,44 @@
 
 
 ```
+
+### 12、 局部刷新
+
+**注意：使用局部刷新时要加上offset**
+
+```
+  /*
+        * 关于position:
+        * 1、在自定义Adapter的时候 position是自己定义的数据0-length-1
+        *
+
+        *
+        * */
+        //设置点击事件，注意此处返回的position是不包括headerView  不包括下拉刷新的
+        mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //此处返回的position为数据的position，不包括 添加的头部和下拉刷新
+                Log.i(TAG, "点击--->" + position);
+
+                //在进行局部刷新的时候 一定要记得加上offsetcount,偏移量；使用局部刷新记得notifyItemChanged第二个参数不要为空
+                    dataAdapter.notifyItemChanged(position+mLRecyclerView.getOffsetCount(), ">>>>>>刷新");
+
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                TextView textView = (TextView) view.findViewById(R.id.item);
+                textView.setText("长按" + position);
+                Log.i(TAG, "长按--->" + position);
+            }
+
+
+        });
+
+```
+
 
 ## 二、如何实现分组
 
