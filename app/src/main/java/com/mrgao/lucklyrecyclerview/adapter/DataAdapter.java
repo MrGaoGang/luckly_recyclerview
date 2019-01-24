@@ -1,6 +1,7 @@
 package com.mrgao.lucklyrecyclerview.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import com.mrgao.lucklyrecyclerview.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -28,12 +28,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
 
 
     public DataAdapter() {
-        mStringList=new ArrayList<>();
+        mStringList = new ArrayList<>();
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
         return new ItemHolder(view);
     }
 
@@ -47,11 +47,30 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
             @Override
             public boolean onLongClick(View view) {
 
-                listener.onLongClick(view,position);
+                listener.onLongClick(view, position);
                 return false;
             }
         });
 
+    }
+
+
+    @Override
+    public void onBindViewHolder(ItemHolder holder, int position, List<Object> payloads) {
+         super.onBindViewHolder(holder, position, payloads);
+        if (payloads.isEmpty()) {
+            Log.i("LoadingActivity", "不走局部刷新" + position);
+            onBindViewHolder(holder, position);
+        } else {
+            //这里做一些局部刷新的东西
+
+            Log.i("LoadingActivity", "当前的位置" + position);
+
+            String item = mStringList.get(position);
+            holder.mTextView.setText("我是局部刷新的" + position + "(old=>)" + item);
+
+
+        }
     }
 
     @Override
@@ -64,8 +83,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
         return mStringList.size();
     }
 
-    public void addAll(List<String> list){
+    public void addAll(List<String> list) {
         mStringList.addAll(list);
+        //全部刷新
         notifyDataSetChanged();
     }
 

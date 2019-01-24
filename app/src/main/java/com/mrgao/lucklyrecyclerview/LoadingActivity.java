@@ -54,7 +54,7 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         //设置下拉刷新的背景图片（可放广告图片哦）
         mLRecyclerView.setRefreshBackground(getResources().getDrawable(R.drawable.headerback));
         //设置上拉加载部分设置背景图片（也可放广告哦）
-       // mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
+        // mLRecyclerView.setFooterBackground(getResources().getDrawable(R.drawable.footerback));
 
         mLRecyclerView.setRefreshColor(getResources().getColor(R.color.colorAccent));
 
@@ -88,11 +88,26 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
         mLRecyclerView.setLoadingTextColor(getResources().getColor(R.color.colorAccent));
         //改变下方加载进度条的颜色
         mLRecyclerView.setLoadingProgressColor(getResources().getColor(R.color.colorAccent));
-        //设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
+
+
+        /*
+        * 关于position:
+        * 1、在自定义Adapter的时候 position是自己定义的数据0-length-1
+        *
+
+        *
+        * */
+        //设置点击事件，注意此处返回的position是不包括headerView  不包括下拉刷新的
         mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                //此处返回的position为数据的position，不包括 添加的头部和下拉刷新
                 Log.i(TAG, "点击--->" + position);
+
+                //在进行局部刷新的时候 一定要记得加上offsetcount,偏移量
+                    dataAdapter.notifyItemChanged(position+mLRecyclerView.getOffsetCount(), ">>>>>>刷新");
+
+
             }
 
             @Override
@@ -101,6 +116,8 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
                 textView.setText("长按" + position);
                 Log.i(TAG, "长按--->" + position);
             }
+
+
         });
 
 

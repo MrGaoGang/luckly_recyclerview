@@ -128,6 +128,11 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
 
     }
 
+    @Override
+    public int getOffsetCount() {
+        return mLRecyclerView.getOffsetCount();
+    }
+
     /*下面是关于RecyckerView的*/
     @Override
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
@@ -303,6 +308,11 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         mLRecyclerView.setOnItemClickListener(onItemClickListener);
     }
 
+    @Override
+    public void setOnItemHeaderClickListener(OnItemHeaderClickListener onItemHeaderClickListener) {
+        mLRecyclerView.setOnItemHeaderClickListener(onItemHeaderClickListener);
+    }
+
 
     /**
      * 设置显示的类型：正常或者分组
@@ -343,8 +353,12 @@ public class LucklyRecyclerView extends LinearLayout implements LuckRecyclerView
         void onItemClick(View rootView, int position);
 
         void onItemLongClick(View rootView, int position);
+
     }
 
+    public interface  OnItemHeaderClickListener{
+        void onHeaderClick(View rootView,int position);
+    }
 
     public interface OnErrorEmptyClickListener {
         void onErrorClick(View errorView);

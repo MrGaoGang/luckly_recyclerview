@@ -115,6 +115,8 @@ public class GroupActivity extends AppCompatActivity {
             public void onItemLongClick(View rootView, int position) {
 
             }
+
+
         });
     }
     @Override

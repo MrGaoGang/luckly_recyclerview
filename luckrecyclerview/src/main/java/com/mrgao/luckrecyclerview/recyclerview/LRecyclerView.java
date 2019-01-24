@@ -687,6 +687,22 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
     }
 
     @Override
+    public void setOnItemHeaderClickListener(LucklyRecyclerView.OnItemHeaderClickListener onItemHeaderClickListener) {
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setOnItemHeaderClickListener(onItemHeaderClickListener);
+        }
+    }
+
+    /**
+     * 数据的偏移量
+     * @return
+     */
+    @Override
+    public int getOffsetCount() {
+        return mWrapAdapter.getHeaderCount()+1;
+    }
+
+    @Override
     public void setOnRefreshListener(LucklyRecyclerView.OnRefreshListener onRefreshListener) {
         if (onRefreshListener != null) {
             mOnRefreshListener = onRefreshListener;
@@ -772,6 +788,7 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             setVisibility(emptyViewVisible ? INVISIBLE : VISIBLE);
         }
     }
+
 
 
     /**
@@ -886,6 +903,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         private boolean isFooterVisiable = true;
         private LucklyRecyclerView.OnItemClickListener mOnItemClickListener;
 
+        private LucklyRecyclerView.OnItemHeaderClickListener onItemHeaderClickListener;
+
         public LoadMoreWrapAdapter(Adapter adapter) {
             mAdapter = adapter;
             mHeaderViews = new ArrayList<>();
@@ -947,26 +966,35 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
             }
 
-            if (mOnItemClickListener != null) {
-                holder.itemView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //减掉1是为了减掉顶部下拉刷新，设置为不可显示
-                        mOnItemClickListener.onItemClick(holder.itemView, position - 1);
+            /**
+             * 头部和底部不可点击
+             */
+            if (position > 0 && position < getItemCount() - 1) {
+                if (position <= mHeaderViews.size() && onItemHeaderClickListener != null) {
 
+                    onItemHeaderClickListener.onHeaderClick(holder.itemView,position-1);
+
+
+                } else {
+                    if (mOnItemClickListener != null) {
+                        holder.itemView.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //减掉1是为了减掉顶部下拉刷新，但是自定义的头部视图可点击
+                                mOnItemClickListener.onItemClick(holder.itemView, position - 1-mHeaderViews.size());
+
+                            }
+                        });
+                        holder.itemView.setOnLongClickListener(new OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                mOnItemClickListener.onItemLongClick(holder.itemView, position - 1-mHeaderViews.size());
+                                return true;
+                            }
+                        });
                     }
-                });
-            }
 
-            if (mOnItemClickListener != null) {
-                holder.itemView.setOnLongClickListener(new OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        mOnItemClickListener.onItemLongClick(holder.itemView, position - 1);
-                        return true;
-                    }
-                });
-
+                }
             }
 
             /**
@@ -975,6 +1003,22 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             setFooterBackground();
 
         }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+            super.onBindViewHolder(holder, position, payloads);
+            if (payloads.isEmpty()) {
+                onBindViewHolder(holder, position);
+            } else {
+                if (mAdapter != null) {
+                    mAdapter.onBindViewHolder(holder, position - mHeaderViews.size() - 1, payloads);
+                }
+
+            }
+        }
+
+
+
 
         /**
          * +2的原因是：一个为顶部下拉刷新，一个为底部上拉加载
@@ -995,6 +1039,8 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
 
         }
+
+
 
 
         @Override
@@ -1230,6 +1276,11 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
         public void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener) {
             this.mOnItemClickListener = onItemClickListener;
         }
+
+        public void setOnItemHeaderClickListener(LucklyRecyclerView.OnItemHeaderClickListener onItemHeaderClickListener) {
+            this.onItemHeaderClickListener = onItemHeaderClickListener;
+        }
+
 
         public class FooterHolder extends ViewHolder {
             TwoFishView mProgressBar;

@@ -83,6 +83,8 @@ public interface LuckRecyclerViewInterface {
 
     void setOnItemClickListener(LucklyRecyclerView.OnItemClickListener onItemClickListener);
 
+    void setOnItemHeaderClickListener(LucklyRecyclerView.OnItemHeaderClickListener onItemHeaderClickListener);
+
     void setOnRefreshListener(LucklyRecyclerView.OnRefreshListener onRefreshListener);
 
 
@@ -109,4 +111,6 @@ public interface LuckRecyclerViewInterface {
     void setRefreshBackgroundResource(int resource);
 
     void setFooterBackgroundResource(int resource);
+
+    int getOffsetCount();
 }
