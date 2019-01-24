@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoadingActivity extends AppCompatActivity implements LucklyRecyclerView.OnLoadMoreListener, LucklyRecyclerView.OnRefreshListener, View.OnClickListener {
+public class LoadingActivity extends AppCompatActivity implements LucklyRecyclerView.OnLoadMoreListener, LucklyRecyclerView.OnRefreshListener, View.OnClickListener,LucklyRecyclerView.OnItemHeaderClickListener {
     String TAG = "LoadingActivity";
     LucklyRecyclerView mLRecyclerView;
 
@@ -200,5 +200,16 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
             }
         }, 3000);
+    }
+
+    /**
+     * 此处处理头部的点击事件
+     *
+     * @param rootView
+     * @param position
+     */
+    @Override
+    public void onHeaderClick(View rootView, int position) {
+
     }
 }
