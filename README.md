@@ -104,10 +104,11 @@
 ```
 #### 8、设置监听事件<br>
 ```Java
- 	//设置点击事件，注意此处返回的position是包括了headerView和下拉加载的视图的
+ 	//设置点击事件，注意此处返回的position是不包括headerView和不包括下拉加载的视图的
 	mLRecyclerView.setOnItemClickListener(new LucklyRecyclerView.OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
+	//position为数据的位置
             Log.i(TAG,"点击--->"+position);
         }
 
