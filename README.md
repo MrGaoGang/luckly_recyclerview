@@ -20,7 +20,7 @@
 第二步：添加依赖<br>
 ```Java
  dependencies {
-	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.2.0'
+	 compile 'com.github.mrgaogang:luckly_recyclerview:v2.3.0'
 }
 ```
 <br>
