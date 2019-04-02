@@ -695,11 +695,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
     /**
      * 数据的偏移量
+     *
      * @return
      */
     @Override
     public int getOffsetCount() {
-        return mWrapAdapter.getHeaderCount()+1;
+        return mWrapAdapter.getHeaderCount() + 1;
     }
 
     @Override
@@ -788,7 +789,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             setVisibility(emptyViewVisible ? INVISIBLE : VISIBLE);
         }
     }
-
 
 
     /**
@@ -972,7 +972,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
             if (position > 0 && position < getItemCount() - 1) {
                 if (position <= mHeaderViews.size() && onItemHeaderClickListener != null) {
 
-                    onItemHeaderClickListener.onHeaderClick(holder.itemView,position-1);
+                    holder.itemView.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onItemHeaderClickListener.onHeaderClick(holder.itemView, position - 1);
+                        }
+                    });
 
 
                 } else {
@@ -981,14 +986,14 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                             @Override
                             public void onClick(View view) {
                                 //减掉1是为了减掉顶部下拉刷新，但是自定义的头部视图可点击
-                                mOnItemClickListener.onItemClick(holder.itemView, position - 1-mHeaderViews.size());
+                                mOnItemClickListener.onItemClick(holder.itemView, position - 1 - mHeaderViews.size());
 
                             }
                         });
                         holder.itemView.setOnLongClickListener(new OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View view) {
-                                mOnItemClickListener.onItemLongClick(holder.itemView, position - 1-mHeaderViews.size());
+                                mOnItemClickListener.onItemLongClick(holder.itemView, position - 1 - mHeaderViews.size());
                                 return true;
                             }
                         });
@@ -1011,13 +1016,12 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
                 onBindViewHolder(holder, position);
             } else {
                 if (mAdapter != null) {
-                    mAdapter.onBindViewHolder(holder, position - mHeaderViews.size() - 1, payloads);
+                    if ((!(holder instanceof HeaderViewHolder)) && (!(holder instanceof FooterHolder)))
+                        mAdapter.onBindViewHolder(holder, position - mHeaderViews.size() - 1, payloads);
                 }
 
             }
         }
-
-
 
 
         /**
@@ -1039,8 +1043,6 @@ public class LRecyclerView extends RecyclerView implements LuckRecyclerViewInter
 
 
         }
-
-
 
 
         @Override

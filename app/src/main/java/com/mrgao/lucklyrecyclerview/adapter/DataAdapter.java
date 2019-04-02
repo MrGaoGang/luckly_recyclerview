@@ -24,7 +24,6 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
 
     List<String> mStringList;
-    private OnItemLongClickListener listener;
 
 
     public DataAdapter() {
@@ -43,14 +42,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
             holder.mTextView.setText(mStringList.get(position));
         }
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
 
-                listener.onLongClick(view, position);
-                return false;
-            }
-        });
 
     }
 
@@ -94,13 +86,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ItemHolder> {
         notifyDataSetChanged();
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        this.listener = listener;
-    }
 
-    public interface OnItemLongClickListener {
-        void onLongClick(View view, int position);
-    }
 
 
     public class ItemHolder extends RecyclerView.ViewHolder {

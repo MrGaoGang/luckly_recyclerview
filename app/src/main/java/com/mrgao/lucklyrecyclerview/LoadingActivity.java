@@ -120,6 +120,13 @@ public class LoadingActivity extends AppCompatActivity implements LucklyRecycler
 
         });
 
+        mLRecyclerView.setOnItemHeaderClickListener(new LucklyRecyclerView.OnItemHeaderClickListener() {
+            @Override
+            public void onHeaderClick(View rootView, int position) {
+                Log.i(TAG, "点击头部--->" + position);
+            }
+        });
+
 
         new Thread(new Runnable() {
             @Override
